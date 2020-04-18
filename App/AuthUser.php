@@ -8,7 +8,7 @@ class AuthUser
     {
         $token = $this->getToken();
     }
-    public function getToken($email)
+    public function getToken()
     {
         $max = 10;
         $abc = array('q','w','e','r','t','y','u','i','o','p','a','s');
