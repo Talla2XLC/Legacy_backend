@@ -20,6 +20,6 @@ $mailer->getMailConfig();
  $mailer->mail->функциию библиотки();
  принцыпи все удачи.
  обезателно выполняй в теле 
- try{
-          $mailer->mail->функциию библиотки();
- }catch (Exception $e) {}
+try{
+    $mailer->mail->функциию библиотки();
+}catch (Exception $e) {}
