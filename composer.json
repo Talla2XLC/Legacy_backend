@@ -1,0 +1,19 @@
+{
+    "name": "talla2xlc/legacy",
+    "authors": [
+        {
+            "name": "hrach333",
+            "email": "hrach@hrach.ru"
+        }
+    ],
+    "require": {
+        "gabordemooij/redbean": "dev-master",
+        "phpmailer/phpmailer": "^6.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\":"core/",
+            "App\\":"App/"
+        }
+    }
+}
