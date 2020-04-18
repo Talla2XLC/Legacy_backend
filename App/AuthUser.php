@@ -24,6 +24,6 @@ class AuthUser
         }
         $shaRand = sha1($random);
         $sol = $random;
-        $token = $random.$shaRand;        
+        $token = $random.$shaRand;       
     }
 }
