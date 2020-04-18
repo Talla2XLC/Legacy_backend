@@ -11,7 +11,12 @@ class Users extends Application implements iUsers
 {
     public function all()
     {
+        //$model = new Model();
+        $mailer = new Mailer();
         
+
+        
+        //echo 'Сласс Users, метод all';
     }
 
     public function setUser()
@@ -21,17 +26,22 @@ class Users extends Application implements iUsers
 
     public function authUser()
     {
-        
-        
-        if(isset($_POST['name'])){
-            $name = $_POST['name'];
+        $model = new Model();
+
+        $user = $_POST;
+
+        if(isset($user['name'])){
+            $name = $user['name'];
                         
         }
-        if(isset($_POST['email'])){
-            $email = $_POST['email'];
+        if(isset($user['email'])){
+            $email = $user['email'];
         }
-        if (isset($name) && isset($email)){
-            //тут сохроняем в DB
-        }
+
+        $legacyUser = R::dispense('person_temp');
+        $legacyUser->first_name = $name;
+        $legacyUser->email = $email;
+        R::store($legacyUser);
+
     }
 }
