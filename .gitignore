@@ -32,4 +32,8 @@ yarn-error.log*
 
 #hrach files
 
-conectGithab.txt
+/conectGithab.txt
+
+/access.log
+
+/error.log

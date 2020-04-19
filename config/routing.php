@@ -5,5 +5,6 @@ return $rout =  [
     '/db/getUsers/all' => 'Users@all',
     '/db/setUsers' => 'Users@setUser',
     '/db/getUsers/item' => 'Users@getItem',
-    '/mail/sendmail' => 'SendMail@goToMail'
+    '/mail/sendmail' => 'SendMail@goToMail',
+    '/auth' => 'AuthUser@auth'
 ];
