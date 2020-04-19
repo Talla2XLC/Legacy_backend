@@ -39,29 +39,4 @@ class AuthUser
         $token['random'] = $random;
         return $token;     
     }
-
-    public function test()
-    {
-        //$secret = $_POST['secret'];
-        $pass = 'test';
-        $sh1 = sha1(md5($pass));
-        echo $sh1."<br>";
-        //$hash = hash('sha256',$sh1);
-        
-        //$sc_hash = $this->getHash($pass);
-        /*
-        if($hash == $sc_hash){
-            echo 'OK';
-        }else{
-            echo 'No';
-        }
-        */
-    }
-
-    public function getHash($secret)
-    {
-        $sc = sha1($secret);
-        echo $sc."<br>";
-        //return hash('sha256',$sc);
-    }
 }
