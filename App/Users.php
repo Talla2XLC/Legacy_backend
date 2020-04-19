@@ -6,7 +6,6 @@ use App\Interfaces\iUsers;
 use Core\Model;
 use Core\Application;
 use Core\Mailer;
-use R\Exception;
 
 class Users extends Application implements iUsers
 {
@@ -51,10 +50,10 @@ class Users extends Application implements iUsers
                 $email = $user['email'];
             }
             $model = new Model();
-            $legacyUser = R::dispense('person_temp');
+            $legacyUser = \R::dispense('person_temp');
             $legacyUser->first_name = $name;
             $legacyUser->email = $email;
-            R::store($legacyUser);
+            \R::store($legacyUser);
 
         }catch (Exception $e) {
             echo "Такой Email уже существует!!!";
