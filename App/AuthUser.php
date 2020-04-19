@@ -2,41 +2,57 @@
 
 namespace App;
 
-use Core\Application;
+
 
 class AuthUser
 {
     private $token;
     private $key;
-
-    public function auth()
+    /**
+     * Функия генерирует URL для отправки по почте чтобы потом подвердить почту
+     * @param string $email почта пользователя
+     */
+    public function getURL(string $email)
     {
         $token = $this->getToken();
-        $genURL = '/auth/confirm/?token='.$token['cash'].'&memory='.$token['random'];
-        echo $genURL;
+        $genURL = '/auth/confirm/?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
+        //echo $genURL;
         //header("Location: {$genURL}");
+        return $genURL;
     }
-    protected function getToken()
+    public function getToken()
     {
         $max = 20;
-        $abc = array('q','w','5','r','2','y','u','i','3','p','a','s','7','d','f','0','4','3','9','1');
+        $abc = array('q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z');
         
         $random = '';
         for($i=0; $i < $max; $i++){
-            $rand = rand(0,9);
+            $rand = rand(1,9);
             $rand_for_array = rand(0,19);
             $abcRandom = $abc[$rand_for_array];
-            if($i % 2 == 0){
+            if($i % $rand == 0){
                 $random .= $rand;
             }else{
                 $random .= $abcRandom;
             }
             
         }
-        $shaRand = hash('sha256',sha1(md5($random)));
-        $sol = $random;
+        $salt = '1k';//salt
+        $shaRand = hash('sha256',sha1(md5($salt.$random)));
         $token['cash'] = $shaRand;
         $token['random'] = $random;
         return $token;     
+    }
+
+    public function checkEmailUser(string $token, string $key)
+    {
+        $salt = '1k';
+        $item = $salt.$key;
+        $hash = hash('sha256',sha1(md5($item)));
+        if($hash == $token){
+            return true;
+        }else{
+            return false;
+        }        
     }
 }
