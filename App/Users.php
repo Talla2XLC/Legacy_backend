@@ -35,22 +35,28 @@ class Users extends Application implements iUsers
         if (isset($email) && isset($name)) {
 
             try {
-                $legacyUser = \R::dispense('person_temp');
+                $legacyUser = \R::dispense('account');
                 $legacyUser->first_name = $name;
                 $legacyUser->email = $email;
                 \R::store($legacyUser);
+                $sendMail = new SendMail();
+                $result = $sendMail->sendMailForAuth($email, $name);
+                if($result){
+                    $array = ['error'=>'','result'=>'true'];
+                    echo json_encode($array);
+                }
             } catch (RedException $e) {
-                echo "Такой Email уже существует!!!";
+                //cho "Такой Email уже существует!!!";
+                $array = ['error'=>'true','result'=>'Такой Email уже существует!!!'];
+                echo json_encode($array);
                 if ($_POST['type'] == 'dev') {
                     echo $e;
                     echo '<br>';
                 }                
             }
-            $sendMail = new SendMail();
-            $sendMail->sendMailForAuth($email, $name);
+            
         }
-        $auth = new AuthUser();
-        $auth->getURL($email);
+        
         
     }
 
@@ -58,18 +64,22 @@ class Users extends Application implements iUsers
     {
         if (!empty($_POST)) {
             $item = $_POST;
-            if (isset($item['token']) && isset($item['memory'])) {
+            if (isset($item['token']) && isset($item['memory']) && isset($item['email'])) {
                 $authUser = new AuthUser();
                 
                 $result = $authUser->checkEmailUser($item['token'], $item['memory']);
-                if ($result) {
-                    $array = ['result' => 'true'];
-                    echo json_encode($array);
+                if ($result) {                    
                     $model = new Model();
                     $urlEmail = $_POST['email'];
                     $user = \R::dispense('account');
-                    $user->isEmailVerified = true;
-                    \R::store($user);
+                    $userEmail = $user->email;
+                    if($urlEmail == $userEmail){
+                        $user->isEmailVerified = true;
+                        \R::store($user);
+                        $array = ['result' => 'true'];
+                        echo json_encode($array);
+                    }
+                    
                 } else {
                     $array = ['result' => 'false'];
                     echo json_encode($array);
