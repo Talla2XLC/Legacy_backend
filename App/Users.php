@@ -7,6 +7,7 @@ use Core\Model;
 use Core\Application;
 use Core\Mailer;
 
+
 class Users extends Application implements iUsers
 {
     public function all()
@@ -55,7 +56,7 @@ class Users extends Application implements iUsers
             $legacyUser->email = $email;
             \R::store($legacyUser);
 
-        }catch (Exception $e) {
+        }catch (R\Exception $e) {
             echo "Такой Email уже существует!!!";
         }
 
