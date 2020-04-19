@@ -1,6 +1,8 @@
 <?php
 
 namespace Core;
+//class_alias('\RedBeanPHP\R', '\R');
+
 
 class Db 
 {
@@ -18,5 +20,6 @@ class Db
             "{$config->config['user_db']}",
             "{$config->config['pass_db']}"
         );
+        
     }
 }
