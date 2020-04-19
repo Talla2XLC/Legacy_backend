@@ -6,6 +6,7 @@ use App\Interfaces\iUsers;
 use Core\Model;
 use Core\Application;
 use Core\Mailer;
+use R\Exception;
 
 class Users extends Application implements iUsers
 {
@@ -49,6 +50,7 @@ class Users extends Application implements iUsers
             if(isset($user['email'])){
                 $email = $user['email'];
             }
+            $model = new Model();
             $legacyUser = R::dispense('person_temp');
             $legacyUser->first_name = $name;
             $legacyUser->email = $email;
@@ -58,7 +60,6 @@ class Users extends Application implements iUsers
             echo "Такой Email уже существует!!!";
         }
 
-        $mailer = new PHPMailer(true);
         try{
             $mailer->setFrom('mailbot@memory-lane.ru');//от кого
             $mailer->addAddress($legacyUser->email, $legacyUser->first_name);//кому

@@ -1,6 +1,8 @@
 <?php
 
 namespace Core;
+//class_alias('\RedBeanPHP\R', '\R');
+use \RedBeanPHP\R;
 
 class Db 
 {
@@ -11,7 +13,7 @@ class Db
         $config = new Configuration('conect_db');
         //Application::dump($config);
         //return;
-        class_alias('\RedBeanPHP\R', '\R');
+        //class_alias('\RedBeanPHP\R', '\R');
 
         \R::setup(
             "pgsql:host={$config->config['host']};dbname={$config->config['db_name']}",
