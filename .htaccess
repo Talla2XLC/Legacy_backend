@@ -14,7 +14,11 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
+<<<<<<< HEAD
     # Handle Front Controller...
+=======
+    # Send Requests To Front Controller...
+>>>>>>> 39b02e4bc12d2bcbac6b43a3719be6b1de61ebeb
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]

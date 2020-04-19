@@ -11,33 +11,57 @@ class AuthUser
 
     public function auth()
     {
-        $this->token = $this->getToken();
-        //Application::dump($token);
-        echo $this->token;
+        $token = $this->getToken();
+        $genURL = '/auth/confirm/?token='.$token['cash'].'&memory='.$token['random'];
+        echo $genURL;
+        //header("Location: {$genURL}");
     }
     protected function getToken()
     {
-        $max = 10;
-        $abc = array('q','w','e','r','t','y','u','i','o','p','a','s');
+        $max = 20;
+        $abc = array('q','w','5','r','2','y','u','i','3','p','a','s','7','d','f','0','4','3','9','1');
+        
         $random = '';
         for($i=0; $i < $max; $i++){
             $rand = rand(0,9);
-            $abcRandom = $abc[$rand];
-            if($rand % 2 == 0){
+            $rand_for_array = rand(0,19);
+            $abcRandom = $abc[$rand_for_array];
+            if($i % 2 == 0){
                 $random .= $rand;
             }else{
                 $random .= $abcRandom;
             }
             
         }
-        $shaRand = hash('sha256',$random);
-        $salt = $random;
-        $token = $salt.$shaRand;
-        $this->key = $random;
-        return $token;   
+        $shaRand = hash('sha256',sha1(md5($random)));
+        $sol = $random;
+        $token['cash'] = $shaRand;
+        $token['random'] = $random;
+        return $token;     
     }
-    public function checkToken()
+
+    public function test()
     {
+        //$secret = $_POST['secret'];
+        $pass = 'test';
+        $sh1 = sha1(md5($pass));
+        echo $sh1."<br>";
+        //$hash = hash('sha256',$sh1);
         
+        //$sc_hash = $this->getHash($pass);
+        /*
+        if($hash == $sc_hash){
+            echo 'OK';
+        }else{
+            echo 'No';
+        }
+        */
+    }
+
+    public function getHash($secret)
+    {
+        $sc = sha1($secret);
+        echo $sc."<br>";
+        //return hash('sha256',$sc);
     }
 }
