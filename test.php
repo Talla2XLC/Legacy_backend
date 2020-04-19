@@ -1,3 +1,11 @@
+<?php
+require_once 'App/AuthUser.php';
+
+$auth = new \App\AuthUser();
+$tokens = $auth->getToken();
+$memory = $tokens['random'];
+$token = $tokens['cash'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +20,7 @@
         $.ajax({
             url:'http://legacy.loc/chechk/auth-email',
             type: 'post',
-            data:'token=4e@t5eg&memory=3456d576f8',
+            data:'token=<?=$token?>&memory=<?=$memory?>',
             success:function(text){
                 $("#app").html(text);
             },

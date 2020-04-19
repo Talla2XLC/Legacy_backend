@@ -22,7 +22,7 @@ class Router
      */
     public function redirection()
     {
-        $urlRequest = $_SERVER['REQUEST_URI'];
+        $urlRequest = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $urlTemplate = $this->readRout();
         if( isset($urlTemplate[$urlRequest]) ){
             $class = $urlTemplate[$urlRequest]['class'];
@@ -44,7 +44,9 @@ class Router
     {
         foreach ($rout as $key=>$item){
             //$class_action[] = $this->parseClassAction($item);
+            
             $urls[$key] = $this->parseClassAction($item);
+
         }
         
         return $urls;

@@ -28,6 +28,6 @@ class Application
 
     private static function getCss()
     {
-        require_once 'public/app_style.php';
+        require_once 'app_style.php';
     }
 }
