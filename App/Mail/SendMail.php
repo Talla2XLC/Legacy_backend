@@ -30,7 +30,7 @@ class SendMail
         $mailer->mail->send();
         return true;
         }catch(Exception $e){
-            return false;
+            return $e;
         }
         
     }

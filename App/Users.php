@@ -52,7 +52,8 @@ class Users extends Application implements iUsers
                     $array = ['error'=>'','result'=>true];
                     echo json_encode($array);
                 }else{
-
+                    $array = ['error'=>'Ошибка при отправки почты: '.$result,'result'=>false];
+                    echo json_encode($array);
                 }
             }
             

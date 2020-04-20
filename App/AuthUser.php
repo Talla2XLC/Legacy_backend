@@ -15,7 +15,7 @@ class AuthUser
     public function getURL(string $email)
     {
         $token = $this->getToken();
-        $genURL = '/auth/confirm/?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
+        $genURL = 'http://memory-lane.ru/auth/confirm/?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
         //echo $genURL;
         //header("Location: {$genURL}");
         return $genURL;
