@@ -14,13 +14,31 @@ class Users extends Application implements iUsers
 {
     public function all()
     {
+        $model = new Model();
+        $begin = '0';
+        $end = '5';
+        $account = \R::findAll('account',"LIMIT 5 OFFSET 0");
+        $i = 0;
+        foreach($account as $item)
+        {
+            //$key = 'user'.$i;
+            $array[$i]['first_name'] = $item['first_name'];
+            $array[$i]['last_name'] = $item['last_name'];
+            $array[$i]['admin_privileges'] = $item['admin_privileges'];
+            $array[$i]['date_created'] = $item['date_created'];
+            $array[$i]['email'] = $item['email'];
+            $i++;
+        }
+        //self::dump($array);
+        echo json_encode($array);
+        //$name = $account->first_name;
     }
 
     public function setUser()
     {
     }
 
-    public function authUser($name,$email)
+    public function authUser()
     {
         $user = $_POST;
 
@@ -31,30 +49,38 @@ class Users extends Application implements iUsers
             $email = $user['email'];
         }
         if (isset($email) && isset($name)) {
-            $model = new Model();
-            try {
-                $legacyUser = \R::dispense('account');
-                $legacyUser->first_name = $name;
-                $legacyUser->email = $email;
-                $legacyUser->expired = 'now';
-                \R::store($legacyUser);
-                $recordDb = true;              
-            } catch (RedException $e) {
-                //cho "Такой Email уже существует!!!";
-                $recordDb = false;
-                $array = ['error'=>print_r($e),'result'=>'Такой Email уже существует!!!'];
-                echo json_encode($array);                
-            }
-            if($recordDb){
-                $sendMail = new SendMail();
-                $result = $sendMail->sendMailForAuth($email, $name);
-                if($result){
-                    $array = ['error'=>'','result'=>true];
-                    echo json_encode($array);
-                }else{
-                    $array = ['error'=>'Ошибка при отправки почты: '.$result,'result'=>false];
-                    echo json_encode($array);
+            $model = new Model();            
+            
+            if(\R::count('account','email = ?', array($email)) == 0){
+                try {
+                
+                
+                    $legacyUser = \R::dispense('account');
+                    $legacyUser->first_name = $name;
+                    $legacyUser->email = $email;
+                    $legacyUser->password = '';
+                    $legacyUser->expired = time();
+                    \R::store($legacyUser);
+                    
+                    $recordDb = true;            
+                } catch (RedException $e) {
+                          //echo $e;         
                 }
+                if(isset($recordDb)){
+                    $sendMail = new SendMail();
+                    $result = $sendMail->sendMailForAuth($email, $name);
+                    if($result){
+                        $array = ['error'=>'','result'=>true];
+                        echo json_encode($array);
+                    }else{
+                        $array = ['error'=>'Ошибка при отправки почты: '.$result,'result'=>false];
+                        echo json_encode($array);
+                    }
+                }
+                \R::close();
+            }else{
+                $array = ['error'=>'Такая почта уже существует!','result'=>false];
+                echo json_encode($array);
             }
             
             

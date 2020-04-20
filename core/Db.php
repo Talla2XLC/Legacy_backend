@@ -8,6 +8,8 @@ class Db extends Application
 {
     use TSingletone;
 
+    private $pdo;
+
     protected function __construct()
     {
         $configs_db = require_once 'config/config_db.php';

@@ -21,7 +21,7 @@ class SendMail
         $mailer->getMailConfig();
         $auth = new AuthUser();
         $url = $auth->getURL($email);
-        $mailer->mail->setFrom('mailbot@memory-lane.ru');//от кого
+        $mailer->mail->setFrom('mailbot@memory-lane.ru','Memory Lane');//от кого
         $mailer->mail->addAddress($email, $name);//кому
         $mailer->mail->Subject = 'Проверка почты';//тема отправки письма
         $mailer->mail->msgHTML("Здравствуйте {$name}. Мы рады что вы заинтересовались ".
