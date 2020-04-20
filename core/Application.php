@@ -3,17 +3,22 @@ namespace Core;
 
 class Application 
 {
-    public $config;
+    public $config_mail;
+
+    public $config_db;
 
     public function __construct()
     {
         $class =  get_class($this);
 
         if($class == 'Core\Mailer'){
-            $configObj = new Configuration('mail','glob');
-            $this->config = $configObj->conf;         
+            $configs = require_once('config/config_mail.php');
+            //$mailConf = new Configuration();
+            $this->config_mail = $configs['mail'];
         }
-        
+        if($class == 'Core\Model'){
+            
+        }
                 
     }
     public static function dump($atr)

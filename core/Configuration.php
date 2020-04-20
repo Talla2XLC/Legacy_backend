@@ -2,25 +2,36 @@
 
 namespace Core;
 
-class Configuration 
+use RedUNIT\Base\Aliasing;
+
+class Configuration
 {
     /**
      * Хранит конфигурацию
      */
     public $conf;
+    private $configs;
     
-    public function __construct($conf,$type = null)
+    public function getConfig($configArray,$conf, $type = null)
     {
-       $configs = require_once 'config/config.php';
-
-       if($type === null) {
-           $type = $configs['type'];
-           $this->conf = $configs[$type][$conf];
+        
+        //Application::dump($configs);
+        /*
+        if ($type === null) {
+            $this->requireConfig();
+            $type = $this->configs['type'];
+            return $this->configs[$type][$conf];
+        } else {
+            $this->requireConfig();
+            //$this->configs = require_once('config/config.php');            
+            return $this->configs['glob']['mail'];
         }
-       else {
-        //Application::dump($configs[$type][$conf]);
-           $this->conf = $configs[$type][$conf];
-       }
-       
+        */
+    }
+
+    private function requireConfig()
+    {
+        require_once('config/config.php');
+        Application::dump($config);
     }
 }

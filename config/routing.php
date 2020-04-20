@@ -8,6 +8,7 @@ return $rout =  [
     '/mail/sendmail' => 'SendMail@goToMail',// это для теста
     '/auth' => 'AuthUser@getURL', //test
     '/auth/confirm' => 'AuthUser@checkEmail',
-    '/tester' => 'Tester@authUser',
-    '/chechk/auth-email' => 'Users@checkUserEmail'
+    '/tester' => 'Tester@testAuthUser',
+    '/chechk/auth-email' => 'Users@checkUserEmail',
+    '/auth/user' => 'Users@authUser'
 ];

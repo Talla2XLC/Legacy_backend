@@ -4,21 +4,21 @@ namespace Core;
 //class_alias('\RedBeanPHP\R', '\R');
 
 
-class Db 
+class Db extends Application
 {
     use TSingletone;
 
     protected function __construct()
     {
-        $config = new Configuration('conect_db');
-        //Application::dump($config);
-        //return;
+        $configs_db = require_once 'config/config_db.php';
+        $config = $configs_db['dev'];
         class_alias('\RedBeanPHP\R', '\R');
+        
 
         \R::setup(
-            "pgsql:host={$config->config['host']};dbname={$config->config['db_name']}",
-            "{$config->config['user_db']}",
-            "{$config->config['pass_db']}"
+            "pgsql:host={$config['host']};dbname={$config['db_name']}",
+            "{$config['user_db']}",
+            "{$config['pass_db']}"
         );
         
     }

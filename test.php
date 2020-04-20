@@ -18,11 +18,14 @@ $token = $tokens['cash'];
     <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
     <script>
         $.ajax({
-            url:'http://legacy.loc/chechk/auth-email',
+            url:'http://legacy.loc/auth/user',
             type: 'post',
-            data:'token=<?=$token?>&memory=<?=$memory?>',
+            data:'name=Грачья&email=hrach333@gmail.com',
             success:function(text){
-                $("#app").html(text);
+               var json = JSON.parse(text);
+               if(json.result == true){
+                   $("#app").text('Вы зарегистрированны для подверждение почты, откройте вашу почту и перейдите по сылке!');
+               }
             },
             error:function(){
                 console.log("error");

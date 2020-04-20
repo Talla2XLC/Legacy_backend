@@ -1,5 +1,5 @@
 <?php
-
+global $config;
 return $config = [
     'type' => 'dev',
     'prod' => [
@@ -25,7 +25,7 @@ return $config = [
     'dev' => [
         'conect_db' =>[
             'host' =>'localhost',
-            'db_name' => 'legacy',
+            'db_name' => 'memory_lane',
             'user_db' => 'postgres',
             'pass_db' => 'mpmegmrx'
         ]

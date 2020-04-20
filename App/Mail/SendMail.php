@@ -18,6 +18,7 @@ class SendMail
     {
         try{
         $mailer = new Mailer();
+        $mailer->getMailConfig();
         $auth = new AuthUser();
         $url = $auth->getURL($email);
         $mailer->mail->setFrom('mailbot@memory-lane.ru');//от кого
@@ -26,6 +27,7 @@ class SendMail
         $mailer->mail->msgHTML("Здравствуйте {$name}. Мы рады что вы заинтересовались ".
         "нашим проектом. Для продолжение переходите по <a href='{$url}'>ссылке</a>", 
         __DIR__);//шаблон отправки
+        $mailer->mail->send();
         return true;
         }catch(Exception $e){
             return false;

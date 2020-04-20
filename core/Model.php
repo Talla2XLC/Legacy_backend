@@ -3,7 +3,7 @@
 namespace Core;
 
 
-class Model
+class Model extends Application
 {
     
     public $pdo;

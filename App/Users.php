@@ -20,10 +20,8 @@ class Users extends Application implements iUsers
     {
     }
 
-    public function authUser()
+    public function authUser($name,$email)
     {
-        $model = new Model();
-
         $user = $_POST;
 
         if (isset($user['name'])) {
@@ -33,27 +31,31 @@ class Users extends Application implements iUsers
             $email = $user['email'];
         }
         if (isset($email) && isset($name)) {
-
+            $model = new Model();
             try {
                 $legacyUser = \R::dispense('account');
                 $legacyUser->first_name = $name;
                 $legacyUser->email = $email;
+                $legacyUser->expired = 'now';
                 \R::store($legacyUser);
+                $recordDb = true;              
+            } catch (RedException $e) {
+                //cho "Такой Email уже существует!!!";
+                $recordDb = false;
+                $array = ['error'=>print_r($e),'result'=>'Такой Email уже существует!!!'];
+                echo json_encode($array);                
+            }
+            if($recordDb){
                 $sendMail = new SendMail();
                 $result = $sendMail->sendMailForAuth($email, $name);
                 if($result){
-                    $array = ['error'=>'','result'=>'true'];
+                    $array = ['error'=>'','result'=>true];
                     echo json_encode($array);
+                }else{
+
                 }
-            } catch (RedException $e) {
-                //cho "Такой Email уже существует!!!";
-                $array = ['error'=>'true','result'=>'Такой Email уже существует!!!'];
-                echo json_encode($array);
-                if ($_POST['type'] == 'dev') {
-                    echo $e;
-                    echo '<br>';
-                }                
             }
+            
             
         }
         
