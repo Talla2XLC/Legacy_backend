@@ -10,5 +10,5 @@ return $rout =  [
     '/auth/confirm' => 'AuthUser@checkEmail',
     '/tester' => 'Tester@testAuthUser',
     '/chechk/auth-email' => 'Users@checkUserEmail',
-    '/auth/user' => 'Users@authUser'
+    '/user/add' => 'Users@authUser'
 ];
