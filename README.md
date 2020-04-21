@@ -24,7 +24,10 @@ URL "/db/getUsers/all" API обязательно должен получать 
 API отпровляет ответ в формат JSON
 пораметры JSON ответа
 ```json
-[{"first_name":"{имя пользователя}","last_name":"{фамилия пользователя}",
-"admin_privileges":boolean,"date_created":"{дата создание пользователя}",
-"email":"{email пользователя}"},...]
+[
+    {
+    "first_name":"{имя пользователя}","last_name":"{фамилия пользователя}",
+    "admin_privileges":boolean,"date_created":"{дата создание пользователя}",
+    "email":"{email пользователя}"
+    },...]
 ```
