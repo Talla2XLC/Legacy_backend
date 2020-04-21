@@ -12,16 +12,18 @@ use \RedBeanPHP\RedException;
 
 class Users extends Application implements iUsers
 {
+    /**
+     * Функция передает лимитированый список пользователей
+     */
     public function all()
     {
         $model = new Model();
-        $begin = '0';
-        $end = '5';
-        $account = \R::findAll('account',"LIMIT 5 OFFSET 0");
+        $limit = '5';
+        $start = '0';
+        $account = \R::findCollection('account',"LIMIT $limit OFFSET $start");
         $i = 0;
-        foreach($account as $item)
-        {
-            //$key = 'user'.$i;
+        
+        while ($item = $account->next()){
             $array[$i]['first_name'] = $item['first_name'];
             $array[$i]['last_name'] = $item['last_name'];
             $array[$i]['admin_privileges'] = $item['admin_privileges'];

@@ -1,5 +1,5 @@
 <?php
-global $config;
+
 return $config = [
     'type' => 'dev',
     'prod' => [
