@@ -1,0 +1,13 @@
+config:
+  dev:
+    configdb:
+      host: "localhost"
+      user: "root"
+      password: "mpmegmrx"
+      dbname: "memory_line"
+    mail:
+      Host: "smtp.yandex.ru"
+      SMTPAuth: true
+      Username: "mailbot@memory-lane.ru"
+      Password: "Mailer"
+      Port: 465
