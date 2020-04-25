@@ -1,9 +1,16 @@
 <?php
-
-$url = "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mr&oauth_token=e50b000614a371ce99c01a80a4558d8ed93b313737363830";
-$path = $argv[2];
-$meta = $argv[3];
-
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+require_once 'config_api.php';
+$data = [
+    'client_id'=>'mcs9883751818.ml.vision.jFW25ocYnpgdK4jpRSF5',
+    'client_secret'=>'4MBG481H7kAW2bY2Jyx5mbWtqnoKeTsai5wFqAEoi9bKovDHjiDfMPnkAKrn3Q',
+    'grant_type'=>'client_credentials'
+];
+$url = "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token=aBb1r3WTKeZ8vPnZ6Ht1G4gRpW7a7jPpz2V9ivEPtutdCKZec";
+$path = 'krist_ruz.jpg';
+$meta = '{"space":"1", "images":[{"name":"krist_ruz.jpg"}], "create_new":false}';
 $filenames = array($path);
 $files = array();
 foreach ($filenames as $f)
@@ -18,14 +25,12 @@ foreach ($filenames as $f)
         $files[$f] = file_get_contents($f);
     }
 }
-
+//$post_data = http_build_query($data);
+$fields = array("meta"=> $meta);
 $boundary = uniqid();
 $delimiter = '-------------' . $boundary;
-
-$fields = array("meta"=> $meta);
-$post_data = build_data_files($boundary, $fields, $files);
-
 $curl = curl_init();
+$post_data = build_data_files($boundary, $fields, $files);
 curl_setopt_array($curl, array(
   CURLOPT_URL => $url,
   #CURLOPT_VERBOSE => true,
@@ -42,10 +47,29 @@ curl_setopt_array($curl, array(
 $response = curl_exec($curl);
 
 $info = curl_getinfo($curl);
-echo "code: ${info['http_code']}\n";
-var_dump($response);
-curl_close($curl);
+//echo "code: ${info['http_code']}\n";
+//var_dump($response);
 
+
+curl_close($curl);
+$json = json_decode($response);
+$info = $json->body->objects[0];
+$info = $info->persons;
+//print_r($info);
+$i =0;
+$person = array('person1'=>'Джесика','person2'=>'Кристина');
+foreach($info as $item){
+    //print_r($item);
+    $arr[$i]['coord'] = $item->coord;
+    if(!empty($person[$item->tag])){
+        $arr[$i]['tag'] = $person[$item->tag];
+    }else{
+        $arr[$i]['tag'] = $item->tag;
+    }
+    
+    $i++;
+}
+echo json_encode($arr);
 function build_data_files($boundary, $fields, $files)
 {
     $data = '';
