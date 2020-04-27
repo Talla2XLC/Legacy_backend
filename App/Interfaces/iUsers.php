@@ -7,7 +7,7 @@ interface iUsers
     /**
      * 
      */
-    public function authUser(); //
+    public function authUser($name,$email); //
 
     public function all();
 

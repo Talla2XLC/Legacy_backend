@@ -39,3 +39,6 @@ yarn-error.log*
 /error.log
 /test.html
 /test.php
+/smarty.php
+/config/
+/.vagrant/
