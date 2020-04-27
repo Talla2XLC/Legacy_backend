@@ -1,25 +1,49 @@
 <?php
 namespace Core;
 
+
+
 class Application 
 {
     public $config_mail;
 
     public $config_db;
 
+    private $config;
+    protected $config_cloud;
+    
+
+
     public function __construct()
     {
         $class =  get_class($this);
-
+        $config  = new Configuration('config');
+        $config->addConfig('config.yaml');
+        //self::dump($config->getConfig());
+         
+        self::dump($this->config_mail);
         if($class == 'Core\Mailer'){
-            $configs = require_once('config/config_mail.php');
-            //$mailConf = new Configuration();
-            $this->config_mail = $configs['mail'];
+            $confMail = $config->get('config.dev.mail');
+            if($confMail != null){
+                //self::dump($confMail);
+                $this->config_mail = $confMail;
+            }
+            
         }
         if($class == 'Core\Model'){
             
         }
+        if($class == 'Core\S3Libs'){
+            $config->addConfig('config_api_mail.yaml');
+            $this->config_cloud = $config->get('config_api_mail.dev.cloud');
+            self::dump($this->config_cloud);
+        }
                 
+    }
+    private function loadConfig()
+    {
+        
+
     }
     public static function dump($atr)
     {

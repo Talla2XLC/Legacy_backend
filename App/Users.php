@@ -17,13 +17,16 @@ class Users extends Application implements iUsers
      */
     public function all()
     {
+        $postdata = file_get_contents("php://input");
+        $request = json_decode($postdata);
+        //print_r($request);
         $model = new Model();
-        $limit = '5';
+        $limit = '30';
         $start = '0';
-        $account = \R::findCollection('account',"LIMIT $limit OFFSET $start");
+        $account = \R::findCollection('account', "LIMIT $limit OFFSET $start");
         $i = 0;
-        
-        while ($item = $account->next()){
+
+        while ($item = $account->next()) {
             $array[$i]['first_name'] = $item['first_name'];
             $array[$i]['last_name'] = $item['last_name'];
             $array[$i]['admin_privileges'] = $item['admin_privileges'];
@@ -40,7 +43,7 @@ class Users extends Application implements iUsers
     {
     }
 
-    public function authUser()
+    public function authUser($name, $email)
     {
         $user = $_POST;
 
@@ -51,44 +54,40 @@ class Users extends Application implements iUsers
             $email = $user['email'];
         }
         if (isset($email) && isset($name)) {
-            $model = new Model();            
-            
-            if(\R::count('account','email = ?', array($email)) == 0){
+            $model = new Model();
+
+            if (\R::count('account', 'email = ?', array($email)) == 0) {
                 try {
-                
-                
+
+
                     $legacyUser = \R::dispense('account');
                     $legacyUser->first_name = $name;
                     $legacyUser->email = $email;
                     $legacyUser->password = '';
                     $legacyUser->expired = time();
                     \R::store($legacyUser);
-                    
-                    $recordDb = true;            
+
+                    $recordDb = true;
                 } catch (RedException $e) {
-                          //echo $e;         
+                    //echo $e;         
                 }
-                if(isset($recordDb)){
+                if (isset($recordDb)) {
                     $sendMail = new SendMail();
                     $result = $sendMail->sendMailForAuth($email, $name);
-                    if($result){
-                        $array = ['error'=>'','result'=>true];
+                    if ($result) {
+                        $array = ['error' => '', 'result' => true];
                         echo json_encode($array);
-                    }else{
-                        $array = ['error'=>'Ошибка при отправки почты: '.$result,'result'=>false];
+                    } else {
+                        $array = ['error' => 'Ошибка при отправки почты: ' . $result, 'result' => false];
                         echo json_encode($array);
                     }
                 }
                 \R::close();
-            }else{
-                $array = ['error'=>'Такая почта уже существует!','result'=>false];
+            } else {
+                $array = ['error' => 'Такая почта уже существует!', 'result' => false];
                 echo json_encode($array);
             }
-            
-            
         }
-        
-        
     }
 
     public function checkUserEmail()
@@ -97,20 +96,19 @@ class Users extends Application implements iUsers
             $item = $_POST;
             if (isset($item['token']) && isset($item['memory']) && isset($item['email'])) {
                 $authUser = new AuthUser();
-                
+
                 $result = $authUser->checkEmailUser($item['token'], $item['memory']);
-                if ($result) {                    
+                if ($result) {
                     $model = new Model();
                     $urlEmail = $_POST['email'];
                     $user = \R::dispense('account');
                     $userEmail = $user->email;
-                    if($urlEmail == $userEmail){
+                    if ($urlEmail == $userEmail) {
                         $user->isEmailVerified = true;
                         \R::store($user);
                         $array = ['result' => 'true'];
                         echo json_encode($array);
                     }
-                    
                 } else {
                     $array = ['result' => 'false'];
                     echo json_encode($array);

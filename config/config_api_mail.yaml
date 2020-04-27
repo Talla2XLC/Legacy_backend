@@ -1,0 +1,6 @@
+config_api_mail:
+  dev:
+      cloud:
+        bucket: "mamery_lane"
+        public_key: "wjVNWdZzrWt9EaLuRi2DoT"
+        secret: "cdWXHsw5ToJpdzpjKXW5AeE9E2Gr1Q25AULKndqcN2f4"
