@@ -10,7 +10,7 @@ class Application
     public $config_db;
 
     private $config;
-
+    protected $config_cloud;
     
 
 
@@ -25,13 +25,18 @@ class Application
         if($class == 'Core\Mailer'){
             $confMail = $config->get('config.dev.mail');
             if($confMail != null){
-                self::dump($confMail);
+                //self::dump($confMail);
                 $this->config_mail = $confMail;
             }
             
         }
         if($class == 'Core\Model'){
             
+        }
+        if($class == 'Core\S3Libs'){
+            $config->addConfig('config_api_mail.yaml');
+            $this->config_cloud = $config->get('config_api_mail.dev.cloud');
+            self::dump($this->config_cloud);
         }
                 
     }

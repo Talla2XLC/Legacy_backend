@@ -40,7 +40,7 @@ class Configuration implements iConfiguration
         list($config, $key,$value) = explode('.',$keyValue);
         //Application::dump($this->config[$key]);
         
-        if(isset($config) && isset($key,) && isset($value)){
+        if(isset($config) && isset($key) && isset($value)){
             foreach($this->config[$config][$key][$value] as $key=>$val){
                 $arr[$key] = $val;
                 
