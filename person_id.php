@@ -8,9 +8,9 @@ $data = [
     'client_secret'=>'4MBG481H7kAW2bY2Jyx5mbWtqnoKeTsai5wFqAEoi9bKovDHjiDfMPnkAKrn3Q',
     'grant_type'=>'client_credentials'
 ];
-$url = "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token=aBb1r3WTKeZ8vPnZ6Ht1G4gRpW7a7jPpz2V9ivEPtutdCKZec";
-$path = 'krist_ruz.jpg';
-$meta = '{"space":"1", "images":[{"name":"krist_ruz.jpg"}], "create_new":false}';
+$url = "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token=6tGyBC4SgZMVnscNfkxTdDevTvQfhoga3YXoVXJZ3mN7355zg";
+$path = 'http://pictures.govoru.com/news/2013/11/27/8676/da75219e.jpg';
+$meta = '{"space":"1", "images":[{"name":"http://pictures.govoru.com/news/2013/11/27/8676/da75219e.jpg"}], "create_new":false}';
 $filenames = array($path);
 $files = array();
 foreach ($filenames as $f)

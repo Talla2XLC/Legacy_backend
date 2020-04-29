@@ -12,15 +12,16 @@ class Db extends Application
 
     protected function __construct()
     {
-        $configs_db = require_once 'config/config_db.php';
-        $config = $configs_db['dev'];
+        $config  = new Configuration('config');
+        $config->addConfig('config.yaml');
+        $config_db = $config->get('config.dev.configdb');
         class_alias('\RedBeanPHP\R', '\R');
         
 
         \R::setup(
-            "pgsql:host={$config['host']};dbname={$config['db_name']}",
-            "{$config['user_db']}",
-            "{$config['pass_db']}"
+            "pgsql:host={$config_db['host']};dbname={$config_db['dbname']}",
+            "{$config_db['user']}",
+            "{$config_db['password']}"
         );
         
     }

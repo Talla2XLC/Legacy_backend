@@ -41,4 +41,7 @@ yarn-error.log*
 /test.php
 /smarty.php
 /config/
-/.vagrant/
+/.vagrant
+/puphpet/
+puphpet/config-custom.yaml
+/config

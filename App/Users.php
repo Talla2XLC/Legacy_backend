@@ -21,6 +21,7 @@ class Users extends Application implements iUsers
         $request = json_decode($postdata);
         //print_r($request);
         $model = new Model();
+        
         $limit = '30';
         $start = '0';
         $account = \R::findCollection('account', "LIMIT $limit OFFSET $start");
@@ -37,6 +38,7 @@ class Users extends Application implements iUsers
         //self::dump($array);
         echo json_encode($array);
         //$name = $account->first_name;
+        
     }
 
     public function setUser()

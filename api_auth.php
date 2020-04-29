@@ -9,8 +9,7 @@ $data = [
     'grant_type'=>'client_credentials'
 ];
 $url = "https://mcs.mail.ru/auth/oauth/v1/token";
-$path = 'friends.jpeg';
-$meta = '{"space":"1", "images":[{"name":"friends.jpeg"}]}';
+
 
 $post_data = http_build_query($data);
 $boundary = uniqid();
@@ -33,7 +32,7 @@ $response = curl_exec($curl);
 
 $info = curl_getinfo($curl);
 //echo "code: ${info['http_code']}\n";
-var_dump($response);
+print_r($response);
 //$json = json_decode($response);
 //var_dump($json);
 

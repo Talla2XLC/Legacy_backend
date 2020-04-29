@@ -1,11 +1,17 @@
 config:
-  dev:
+  prod:
     configdb:
       host: "localhost"
       user: "postgres"
       password: "W}J}W`PH&n{>x2nf>%[+^Ex=JAX8N^Et~Er"
-      dbname: "memory_line"
-    mail:
+      dbname: "memory_lane"
+  dev:
+    configdb:
+      host: "193.168.3.129"
+      user: "postgres"
+      password: "W}J}W`PH&n{>x2nf>%[+^Ex=JAX8N^Et~Er"
+      dbname: "memory_lane_test"
+    mail: 
       Host: "smtp.yandex.ru"
       SMTPAuth: true
       Username: "mailbot@memory-lane.ru"

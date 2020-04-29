@@ -11,7 +11,7 @@ class Application
 
     private $config;
     protected $config_cloud;
-    
+    protected $config_id_face;
 
 
     public function __construct()
@@ -20,8 +20,10 @@ class Application
         $config  = new Configuration('config');
         $config->addConfig('config.yaml');
         //self::dump($config->getConfig());
+        //$this->config_db = $config->get('config.dev.configdb');
+            //self::dump($this->config_db);
          
-        self::dump($this->config_mail);
+        //self::dump($this->config_mail);
         if($class == 'Core\Mailer'){
             $confMail = $config->get('config.dev.mail');
             if($confMail != null){
@@ -30,13 +32,15 @@ class Application
             }
             
         }
-        if($class == 'Core\Model'){
-            
-        }
         if($class == 'Core\S3Libs'){
             $config->addConfig('config_api_mail.yaml');
             $this->config_cloud = $config->get('config_api_mail.dev.cloud');
-            self::dump($this->config_cloud);
+            //self::dump($this->config_cloud);
+        }
+        if($class == 'Core\MainFaceRecognition'){
+            $config->addConfig('config_api_mail.yaml');
+            $this->config_id_face = $config->get('config_api_mail.dev.faceid');
+            //self::dump($this->config_id_face);
         }
                 
     }
