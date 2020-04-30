@@ -7,6 +7,7 @@ use \RedBeanPHP\RedException;
 
 class DbPictures
 {
+    
     public function insert($idAccount,$idAlbum,$url, bool $reference = false)
     {
         $model = new Model();
@@ -50,9 +51,9 @@ class DbPictures
             //print_r($result);
             $photos = \R::load('unit_photo',$result['photo_id']);
             
-            $phs[] = $photos['content_url'];
+            $arr_photos[] = $photos['content_url'];
         }
         
-        return $phs;
+        return $arr_photos;
     }
 }

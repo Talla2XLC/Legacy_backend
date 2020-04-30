@@ -11,7 +11,7 @@ class Images
     {
         $dbPictures = new DbPictures();
 
-        $imgs =  $dbPictures->select('12');
+        $imgs =  $dbPictures->select('11');
         $s3Libs = new S3Libs();
         foreach($imgs as $img){
             $urls[] = $s3Libs->getURL($img,'9');

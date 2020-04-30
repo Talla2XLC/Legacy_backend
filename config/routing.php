@@ -13,7 +13,7 @@ return $rout =  [
     '/set/person' => 'RecognitionFace@addPerson',
     '/recognize' => 'RecognitionFace@recognizePersone',
     '/auth/confirm' => 'AuthUser@checkEmail',
-    '/tester' => 'Tester@testAuthUser',
+    '/tester' => 'Tester@testAuthUser',//test
     '/chechk/auth-email' => 'Users@checkUserEmail',
     '/user/add' => 'Users@authUser'
 ];
