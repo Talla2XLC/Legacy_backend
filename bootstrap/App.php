@@ -9,6 +9,7 @@ class App
 {
     public function run()
     {
+        session_start();
         $route = new Router();
         $route->redirection();
     }

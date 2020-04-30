@@ -23,7 +23,7 @@ class S3Libs extends Application
      * @param string $iamgeDir путь к файлу
      * @param string $user индифакционый номер пользователя
      */
-    public function uploadCloud($name_file,$imagDir,$user): void
+    public function uploadCloud($name_file,$imagDir,$user)
     {
         $this->key = $user.'/'.$name_file;
 
@@ -56,16 +56,35 @@ class S3Libs extends Application
         
         if($content == $result['Body']){
             $arr = array('error'=>'','result'=>true);
-            echo json_encode($arr);
-            //$result = true;
+            
+            return true;
         }else{
             $arr = array('error'=>'','result'=>true);
-            echo json_encode($arr);
-            //$result = false;
+            //echo json_encode($arr);
+             return false;
         }
         
     }
-
+    public function getURL($name_file,$user)
+    {
+        $this->key = $user.'/'.$name_file;
+        $s3Client = new S3Client([
+            'credentials' => [
+                'key'    => $this->config_cloud['public_key'],
+                'secret' => $this->config_cloud['secret'],
+            ],
+            'endpoint' => 'https://hb.bizmrg.com',
+            'region'   => 'ru-msk',
+            'version'  => 'latest',
+        ]);
+        $cmd = $s3Client->getCommand('GetObject', [
+            'Bucket' => $this->config_cloud['bucket'],
+            'Key'    => $this->key,
+        ]);
+        $request = $s3Client->createPresignedRequest($cmd, '+1 minutes');
+        $presignedUrl = (string) $request->getUri();
+        return $presignedUrl;
+    }
     public function testPutCopyObject($copyFile): void
     {
         $sourcebucket = $this->config_cloud['bucket'];

@@ -10,7 +10,7 @@ config:
       host: "193.168.3.129"
       user: "postgres"
       password: "W}J}W`PH&n{>x2nf>%[+^Ex=JAX8N^Et~Er"
-      dbname: "memory_lane_test"
+      dbname: "dev_memory_lane"
     mail: 
       Host: "smtp.yandex.ru"
       SMTPAuth: true
