@@ -7,10 +7,10 @@ config:
       dbname: "memory_lane"
   dev:
     configdb:
-      host: "193.168.3.129"
+      host: "localhost"
       user: "postgres"
-      password: "W}J}W`PH&n{>x2nf>%[+^Ex=JAX8N^Et~Er"
-      dbname: "dev_memory_lane"
+      password: ""
+      dbname: "legacy"
     mail: 
       Host: "smtp.yandex.ru"
       SMTPAuth: true

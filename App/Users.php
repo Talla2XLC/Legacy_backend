@@ -99,18 +99,20 @@ class Users extends Application implements iUsers
             if (isset($item['token']) && isset($item['memory']) && isset($item['email'])) {
                 $authUser = new AuthUser();
 
-                $result = $authUser->checkEmailUser($item['token'], $item['memory']);
+                $result = $authUser->checkToken($item['token'], $item['memory']);
                 if ($result) {
                     $model = new Model();
                     $urlEmail = $_POST['email'];
-                    $user = \R::dispense('account');
+                    $account = \R::find('account', 'email = '.$urlEmail);
+                    Application::dump($account);
+                    /*
                     $userEmail = $user->email;
                     if ($urlEmail == $userEmail) {
                         $user->isEmailVerified = true;
                         \R::store($user);
                         $array = ['result' => 'true'];
                         echo json_encode($array);
-                    }
+                    }*/
                 } else {
                     $array = ['result' => 'false'];
                     echo json_encode($array);
