@@ -9,11 +9,8 @@
     "require": {
         "gabordemooij/redbean": "dev-master",
         "phpmailer/phpmailer": "^6.1",
-<<<<<<< HEAD
-=======
         "symfony/config": "^5.0",
         "symfony/yaml": "^5.0",
->>>>>>> 310266cff62647b4dde174409107fe15c97aa9d2
         "aws/aws-sdk-php": "^3.135"
     },
     "autoload": {

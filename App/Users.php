@@ -21,7 +21,7 @@ class Users extends Application implements iUsers
         $request = json_decode($postdata);
         //print_r($request);
         $model = new Model();
-        
+
         $limit = '30';
         $start = '0';
         $account = \R::findCollection('account', "LIMIT $limit OFFSET $start");
@@ -38,7 +38,7 @@ class Users extends Application implements iUsers
         //self::dump($array);
         echo json_encode($array);
         //$name = $account->first_name;
-        
+
     }
 
     public function setUser()
@@ -65,13 +65,13 @@ class Users extends Application implements iUsers
                     $legacyUser = \R::dispense('account');
                     $legacyUser->first_name = $name;
                     $legacyUser->email = $email;
-                    $legacyUser->password = '';
-                    $legacyUser->expired = time();
+                    $legacyUser->passwd = 'HASHED VALUE';
+                    //$legacyUser->expired = time();
                     \R::store($legacyUser);
 
                     $recordDb = true;
                 } catch (RedException $e) {
-                    //echo $e;         
+                    echo $e;
                 }
                 if (isset($recordDb)) {
                     $sendMail = new SendMail();
@@ -93,31 +93,46 @@ class Users extends Application implements iUsers
     }
 
     public function checkUserEmail()
-    {
-        if (!empty($_POST)) {
-            $item = $_POST;
-            if (isset($item['token']) && isset($item['memory']) && isset($item['email'])) {
-                $authUser = new AuthUser();
+    {        
+        $url  = $_POST;
 
-                $result = $authUser->checkToken($item['token'], $item['memory']);
-                if ($result) {
-                    $model = new Model();
-                    $urlEmail = $_POST['email'];
-                    $account = \R::find('account', 'email = '.$urlEmail);
-                    Application::dump($account);
-                    /*
-                    $userEmail = $user->email;
-                    if ($urlEmail == $userEmail) {
-                        $user->isEmailVerified = true;
-                        \R::store($user);
-                        $array = ['result' => 'true'];
-                        echo json_encode($array);
-                    }*/
-                } else {
-                    $array = ['result' => 'false'];
+        if (isset($url['token']) && !empty($url['token'])) $token = $url['token'];
+        if (isset($url['key']) && !empty($url['key'])) $key = $url['key'];
+        if (isset($url['email']) && !empty($url['email'])) $email = $url['email'];
+        //echo $token;
+        //$token = '39b3114da0683dab17881b3cb1108489d44330a01dfefec17bd89e65200e9c8c';
+        //$key = '7kjgwusoag5wip758p9e';
+        //$email = "hrach@hrach.ru";
+        if (isset($token) && isset($key) && isset($email)) {
+            //$item = $_POST;
+            //if (!isset($item['token']) && !isset($item['memory']) && !isset($item['email'])) {
+            $authUser = new AuthUser();
+            //print_r($_POST);
+            $result = $authUser->checkToken($token, $key);
+            if ($result) {
+                $model = new Model();
+                $urlEmail = $email;
+                $account = \R::findOne('account', "email = ?", array($urlEmail));
+                $email_verified = true;
+
+                $userEmail = $account->email;
+                if ($urlEmail == $userEmail) {
+                    $acc = \R::exec("UPDATE account SET email_verified = true WHERE email = '".$userEmail."'");                   
+                    $array = ['result' => 'true'];
+                    //$_SESSION['user'] = '';
                     echo json_encode($array);
                 }
+            } else {
+                $array = ['result' => 'false'];
+                echo json_encode($array);
             }
+        } else {
+            echo 'Нет параметров.';
         }
     }
+    public function setAccount()
+    {
+
+    }
+    
 }

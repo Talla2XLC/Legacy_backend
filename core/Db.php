@@ -22,11 +22,7 @@ class Db extends Application
             "{$config_db['user']}",
             "{$config_db['password']}"
         );
-        if(\R::testConnection()){
-            echo 'ok';
-        }else{
-            echo'no';
-        }
+        \R::freeze(TRUE);
         
     }
 }
