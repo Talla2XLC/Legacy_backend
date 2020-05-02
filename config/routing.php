@@ -16,5 +16,6 @@ return $rout =  [
     '/tester' => 'Tester@testAuthUser',//test
     '/chechk/auth-email' => 'Users@checkUserEmail',
     '/user/add' => 'Users@authUser',
-    '/db/checkEmail' => 'Users@checkUserEmail'
+    '/db/checkEmail' => 'Users@checkUserEmail',
+    '/db/setAccount' => 'Users@setAccount'
 ];

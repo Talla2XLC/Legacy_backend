@@ -49,23 +49,22 @@ class Users extends Application implements iUsers
     {
         $user = $_POST;
 
-        if (isset($user['name'])) {
-            $name = $user['name'];
+        if (isset($user['password'])) {
+            $password = $user['password'];
         }
         if (isset($user['email'])) {
             $email = $user['email'];
         }
-        if (isset($email) && isset($name)) {
+        if (isset($email) && isset($password)) {
             $model = new Model();
-
             if (\R::count('account', 'email = ?', array($email)) == 0) {
+                $password = password_hash($password, PASSWORD_BCRYPT);
                 try {
 
 
                     $legacyUser = \R::dispense('account');
-                    $legacyUser->first_name = $name;
                     $legacyUser->email = $email;
-                    $legacyUser->passwd = 'HASHED VALUE';
+                    $legacyUser->password = $password;
                     //$legacyUser->expired = time();
                     \R::store($legacyUser);
 
@@ -99,10 +98,7 @@ class Users extends Application implements iUsers
         if (isset($url['token']) && !empty($url['token'])) $token = $url['token'];
         if (isset($url['key']) && !empty($url['key'])) $key = $url['key'];
         if (isset($url['email']) && !empty($url['email'])) $email = $url['email'];
-        //echo $token;
-        //$token = '39b3114da0683dab17881b3cb1108489d44330a01dfefec17bd89e65200e9c8c';
-        //$key = '7kjgwusoag5wip758p9e';
-        //$email = "hrach@hrach.ru";
+        
         if (isset($token) && isset($key) && isset($email)) {
             //$item = $_POST;
             //if (!isset($item['token']) && !isset($item['memory']) && !isset($item['email'])) {
@@ -113,26 +109,39 @@ class Users extends Application implements iUsers
                 $model = new Model();
                 $urlEmail = $email;
                 $account = \R::findOne('account', "email = ?", array($urlEmail));
-                $email_verified = true;
-
+                //$email_verified = true;
                 $userEmail = $account->email;
                 if ($urlEmail == $userEmail) {
-                    $acc = \R::exec("UPDATE account SET email_verified = true WHERE email = '".$userEmail."'");                   
-                    $array = ['result' => 'true'];
+                    $acc = \R::exec("UPDATE account SET email_verified = true WHERE email = '".$userEmail."'");
+                    $id = $account->id;                 
+                    $array = ['error'=>'','result' => 'true','id_account'=>$id];
                     //$_SESSION['user'] = '';
                     echo json_encode($array);
                 }
+                \R::close();
             } else {
-                $array = ['result' => 'false'];
+                $array = ['error'=>'Произошла ошибка во время аутентификации, попробуйте еще раз!','result' => 'false'];
                 echo json_encode($array);
             }
         } else {
-            echo 'Нет параметров.';
+            $array = ['error'=>1,'result' => 'false'];
+                echo json_encode($array);
         }
     }
     public function setAccount()
     {
+        if (isset($_POST['id_account']) && !empty($_POST['id_account'])) $id = $_POST['id_account'];
+        if (isset($_POST['first_name']) && !empty($_POST['first_name'])) $first_name = $_POST['first_name'];
+        if (isset($_POST['last_name']) && !empty($_POST['last_name'])) $last_name = $_POST['last_name'];
+        if (isset($_POST['phone']) && !empty($_POST['phone'])) $phone = $_POST['phone'];
 
+        if(isset($id)){
+            new Model();
+            $account = \R::load('account',$id);
+            if(isset($first_name)) $account->first_name = $first_name;
+            if(isset($last_name)) $account->last_name = $last_name;
+            if(isset($phone)) $account->phone = $phone;
+        }
     }
     
 }

@@ -46,3 +46,4 @@ yarn-error.log*
 puphpet/config-custom.yaml
 /config
 /editor/
+/config/
