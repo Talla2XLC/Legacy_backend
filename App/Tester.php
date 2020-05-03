@@ -11,7 +11,7 @@ class Tester
     {
         $user = new Users();
 
-        $user->authUser('Gregory','hrach@hrach.ru');
+        $user->authUser('12345','hrach@hrach.ru');
     }
     
 

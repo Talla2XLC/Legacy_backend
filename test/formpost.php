@@ -9,8 +9,10 @@
 
 <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
 <div id="info"></div>
-<input type="text" id="album_name">
+<form action="/ddd" method="post">
+<input type="text" id="album_name" name="album_name">
 <a href="#" id="click">Отправить</a>
+
 <script>
     $(document).ready(function(){
         $("#click").click(function(){

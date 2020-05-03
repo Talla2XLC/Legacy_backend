@@ -16,11 +16,11 @@ class AuthUser
     public function getURL(string $email)
     {
         $token = $this->getToken();
-        //$genURL = 'http://memory-lane.ru/auth/confirm/?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
+        $genURL = 'http://dev.memory-lane.ru/auth/?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
         //$genURL = 'http://localhost/Legacy_backend/test/check_user.php?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
         //echo $genURL;
         //header("Location: {$genURL}");
-        $genURL = 'http://legacy.loc/test/check_user.php?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
+        //$genURL = 'http://legacy.loc/test/check_user.php?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
         return $genURL;
     }
     public function getToken()
