@@ -21,6 +21,7 @@
                 type: 'POST',
                 url: '/db/checkEmail',
                 data: 'token='+token+'&key='+memory+'&email='+email,
+                
                 error: function(x, t, e) {
                     if (t === 'timeout') {
                         // Произошел тайм-аут
@@ -35,6 +36,7 @@
 
             });
         });
+        
     </script>
 </body>
 

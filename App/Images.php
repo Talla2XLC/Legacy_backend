@@ -67,11 +67,11 @@ class Images
                     move_uploaded_file($tmp, $imageDir);
                     if (exif_imagetype($imageDir) == IMAGETYPE_JPEG) {
                         $s3Libs = new S3Libs();
-                        $id = '9';
+                        $id = '10';
 
                         $uploadResult = $s3Libs->uploadCloud($image, $imageDir, $id);
                         if($uploadResult == true){
-                            $dbPictures->insert('9','12',$image);
+                            $dbPictures->insert('10','12',$image);
                             $result['result'][$n]  = true;
                             $result['error'][$n] = '';
                             $result['img'][$n] = $nImage;
