@@ -15,12 +15,12 @@
             var token = '<?= $_GET['token'] ?>',
             memory = '<?= $_GET['memory'] ?>',
             email = '<?= $_GET['email'] ?>';
-            
+            var test = "tetsts";
             //console.log(email);
             $.ajax({
                 type: 'POST',
-                url: '/db/checkEmail',
-                data: 'token='+token+'&key='+memory+'&email='+email,
+                url: '/test/form.php',
+                data: {"test":test},
                 
                 error: function(x, t, e) {
                     if (t === 'timeout') {
