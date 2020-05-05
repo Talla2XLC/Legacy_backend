@@ -154,7 +154,6 @@ class Users extends Application implements iUsers
     public function checkUserEmail()
     {
         $data = json_decode(file_get_contents("php://input"));
-
         if (isset($data->token) && !empty($data->token)) $token = $data->token;
         if (isset($data->key) && !empty($data->key)) $key = $data->key;
         if (isset($data->email) && !empty($data->email)) $email = $data->email;
