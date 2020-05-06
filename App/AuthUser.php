@@ -16,7 +16,7 @@ class AuthUser
     public function getURL(string $email)
     {
         $token = $this->getToken();
-        $genURL = 'http://dev.memory-lane.ru/auth/?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
+        $genURL = 'http://dev.memory-lane.ru/check/auth-email/?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
         //$genURL = 'http://localhost/Legacy_backend/test/check_user.php?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
         //echo $genURL;
         //header("Location: {$genURL}");
@@ -62,7 +62,7 @@ class AuthUser
     public function checkEmailUser()
     {
         $url = $_POST;
-        if(isset($url['token']) && !empty($url['token'])) $token = $url['token'];
+        if(isset($url->token) && !empty($url['token'])) $token = $url['token'];
         if(isset($url['key']) && !empty($url['key'])) $key = $url['key'];
         if(isset($url['email']) && !empty($url['email'])) $email = $url['email'];
         if(isset($token) && isset($key) && isset($email)){
