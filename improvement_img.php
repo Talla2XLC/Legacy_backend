@@ -8,7 +8,7 @@ $data = [
     'client_secret'=>'4MBG481H7kAW2bY2Jyx5mbWtqnoKeTsai5wFqAEoi9bKovDHjiDfMPnkAKrn3Q',
     'grant_type'=>'client_credentials'
 ];
-$url = "https://smarty.mail.ru/api/v1/photo/improve?oauth_provider=mcs&oauth_token=2ay6PvC3vFfnjN4aEj29pMSswRvA6SVQLMbWuYbJPzPizkygn3";
+$url = "https://smarty.mail.ru/api/v1/photo/improve?oauth_provider=mcs&oauth_token=2WoZ3vua8JjE8D3XzvFfq657g3KxEwSZyQvah8FGZFJsXMnC19";
 $path = 'staryi_foto.jpg';
 $meta = '{"mode":["resolution", "improve"], "images":[{"name":"staryi_foto.jpg"}], "rfactor":4,"rtype":"photo"}';
 $filenames = array($path);
