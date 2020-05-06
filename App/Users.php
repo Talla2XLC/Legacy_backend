@@ -108,30 +108,37 @@ class Users extends Application implements iUsers
                 $email = $data->email;
 
                 new Model();
-                $account = \R::findOne('account', 'email = ?', array($email));
-                if ($account != null) {
-                    $hash = $account->passwd;
+                $account_email = \R::findOne('account', 'email = ?', array($email));
+                $account_email_verified = \R::getAll('SELECT "email_verified" FROM account WHERE "email_verified" = true');
+                print_r($account_email_verified);
+                if ($account_email != null) {
+                    if($account_email_verified == null){
+                        $arr = ['error'=>'Вы еще не подтвердили почту!','result'=>false];
+                        echo json_encode($arr);
+                        return;
+                    }
+                    $hash = $account_email->passwd;
                     $result = password_verify($password, $hash);
                     if ($result) {
-                        $id_user = $account->id;
+                        $id_user = $account_email->id;
                         
                         $arrayMethod = ['45678','4#67Ga6','#f7r3Y9'];
                         $randKey = rand(0,2);
                         $method = $arrayMethod[$randKey];
                         $token = $this->getToken($id_user,$method);
                         $_SESSION['user_id'] =   $id_user;
-                        setcookie('id_user', $account->id, strtotime('+ 1 month'));
+                        setcookie('id_user', $account_email->id, strtotime('+ 1 month'));
                         setcookie('var',$method,strtotime('+ 1 month'));
                         setcookie('token',$token,strtotime('+ 1 month'));
                         $arr = ['error'=>'','result'=>true,'token'=>$token];
-                        echo json_decode($arr);
+                        echo json_encode($arr);
                     }else{
                         $arr = ['error'=>'Пароль не верен','result'=>false];
-                        echo json_decode($arr);
+                        echo json_encode($arr);
                     }
                 }else{
                     $arr = ['error'=>'Такая почта не существует','result'=>false];
-                    echo json_decode($arr);
+                    echo json_encode($arr);
                 }
             }
         }
@@ -154,6 +161,7 @@ class Users extends Application implements iUsers
     public function checkUserEmail()
     {
         $data = json_decode(file_get_contents("php://input"));
+        //print_r($data);
         if (isset($data->token) && !empty($data->token)) $token = $data->token;
         if (isset($data->key) && !empty($data->key)) $key = $data->key;
         if (isset($data->email) && !empty($data->email)) $email = $data->email;
