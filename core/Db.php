@@ -22,7 +22,7 @@ class Db extends Application
             "{$config_db['user']}",
             "{$config_db['password']}"
         );
-        
+        \R::freeze(TRUE);
         
     }
 }

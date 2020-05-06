@@ -2,7 +2,8 @@
 
 namespace App;
 
-
+use Core\Application;
+use Core\Model;
 
 class AuthUser
 {
@@ -15,9 +16,11 @@ class AuthUser
     public function getURL(string $email)
     {
         $token = $this->getToken();
-        $genURL = 'http://memory-lane.ru/auth/confirm/?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
+        $genURL = 'http://dev.memory-lane.ru/check/auth-email/?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
+        //$genURL = 'http://localhost/Legacy_backend/test/check_user.php?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
         //echo $genURL;
         //header("Location: {$genURL}");
+        //$genURL = 'http://legacy.loc/test/check_user.php?token='.$token['cash'].'&memory='.$token['random'].'&email='.$email;
         return $genURL;
     }
     public function getToken()
@@ -44,7 +47,7 @@ class AuthUser
         return $token;     
     }
 
-    public function checkEmailUser(string $token, string $key)
+    public function checkToken(string $token, string $key)
     {
         $salt = '1k';
         $item = $salt.$key;
@@ -54,5 +57,22 @@ class AuthUser
         }else{
             return false;
         }        
+    }
+
+    public function checkEmailUser()
+    {
+        $url = $_POST;
+        if(isset($url->token) && !empty($url['token'])) $token = $url['token'];
+        if(isset($url['key']) && !empty($url['key'])) $key = $url['key'];
+        if(isset($url['email']) && !empty($url['email'])) $email = $url['email'];
+        if(isset($token) && isset($key) && isset($email)){
+            $result = $this->checkToken($token, $key);
+            if($result){
+                new Model();
+                $account = \R::find('account', 'email = '.$email);
+                Application::dump($account);
+            }
+        }
+        
     }
 }

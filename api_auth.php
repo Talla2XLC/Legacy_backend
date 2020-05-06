@@ -12,6 +12,7 @@ $url = "https://mcs.mail.ru/auth/oauth/v1/token";
 
 
 $post_data = http_build_query($data);
+echo $post_data;
 $boundary = uniqid();
 $delimiter = '-------------' . $boundary;
 //$post_data = build_data_files($boundary, $fields, $files);

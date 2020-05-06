@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "626609c3ee4c06722e0f8c27e0e3ac31",
+    "content-hash": "a3d0c9104b94f91b7b060d63417cdde5",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.137.0",
+            "version": "3.137.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "e92ed36668dd546041714d3d1c520d6206423ab3"
+                "reference": "935060ae3d64f2bfeab7a6ba46bebe525047446c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/e92ed36668dd546041714d3d1c520d6206423ab3",
-                "reference": "e92ed36668dd546041714d3d1c520d6206423ab3",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/935060ae3d64f2bfeab7a6ba46bebe525047446c",
+                "reference": "935060ae3d64f2bfeab7a6ba46bebe525047446c",
                 "shasum": ""
             },
             "require": {
@@ -88,6 +88,7 @@
                 "s3",
                 "sdk"
             ],
+<<<<<<< HEAD
             "time": "2020-04-30T18:16:22+00:00"
         },
         {
@@ -102,6 +103,22 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/doctrine/cache/zipball/382e7f4db9a12dc6c19431743a2b096041bcdd62",
                 "reference": "382e7f4db9a12dc6c19431743a2b096041bcdd62",
+=======
+            "time": "2020-05-01T18:13:22+00:00"
+        },
+        {
+            "name": "gabordemooij/redbean",
+            "version": "v5.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gabordemooij/redbean.git",
+                "reference": "8b8326f7dbe8023675b0d1936df4800fe0cce0b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/8b8326f7dbe8023675b0d1936df4800fe0cce0b3",
+                "reference": "8b8326f7dbe8023675b0d1936df4800fe0cce0b3",
+>>>>>>> f9b1b10d7646c0131d969721b7b34f5a336076d5
                 "shasum": ""
             },
             "require": {
@@ -160,6 +177,7 @@
             "description": "PHP Doctrine Cache library is a popular cache implementation that supports many different drivers such as redis, memcache, apc, mongodb and others.",
             "homepage": "https://www.doctrine-project.org/projects/cache.html",
             "keywords": [
+<<<<<<< HEAD
                 "abstraction",
                 "apcu",
                 "cache",
@@ -536,6 +554,8 @@
             "description": "RedBeanPHP ORM",
             "homepage": "https://redbeanphp.com/",
             "keywords": [
+=======
+>>>>>>> f9b1b10d7646c0131d969721b7b34f5a336076d5
                 "orm"
             ],
             "time": "2020-04-26T13:31:18+00:00"
@@ -987,6 +1007,7 @@
         },
         {
             "name": "symfony/config",
+<<<<<<< HEAD
             "version": "v2.8.52",
             "source": {
                 "type": "git",
@@ -997,6 +1018,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/config/zipball/7dd5f5040dc04c118d057fb5886563963eb70011",
                 "reference": "7dd5f5040dc04c118d057fb5886563963eb70011",
+=======
+            "version": "v5.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/config.git",
+                "reference": "db1674e1a261148429f123871f30d211992294e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/config/zipball/db1674e1a261148429f123871f30d211992294e7",
+                "reference": "db1674e1a261148429f123871f30d211992294e7",
+>>>>>>> f9b1b10d7646c0131d969721b7b34f5a336076d5
                 "shasum": ""
             },
             "require": {
@@ -1040,6 +1073,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-11-26T09:38:12+00:00"
         },
         {
@@ -1172,6 +1206,36 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/filesystem/zipball/b2da5009d9bacbd91d83486aa1f44c793a8c380d",
                 "reference": "b2da5009d9bacbd91d83486aa1f44c793a8c380d",
+=======
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-04-15T15:59:10+00:00"
+        },
+        {
+            "name": "symfony/filesystem",
+            "version": "v5.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/filesystem.git",
+                "reference": "7cd0dafc4353a0f62e307df90b48466379c8cc91"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/7cd0dafc4353a0f62e307df90b48466379c8cc91",
+                "reference": "7cd0dafc4353a0f62e307df90b48466379c8cc91",
+>>>>>>> f9b1b10d7646c0131d969721b7b34f5a336076d5
                 "shasum": ""
             },
             "require": {
@@ -1207,7 +1271,25 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2016-07-20T05:43:46+00:00"
+=======
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-04-12T14:40:17+00:00"
+>>>>>>> f9b1b10d7646c0131d969721b7b34f5a336076d5
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1501,6 +1583,7 @@
         },
         {
             "name": "symfony/yaml",
+<<<<<<< HEAD
             "version": "v2.8.52",
             "source": {
                 "type": "git",
@@ -1511,6 +1594,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/yaml/zipball/02c1859112aa779d9ab394ae4f3381911d84052b",
                 "reference": "02c1859112aa779d9ab394ae4f3381911d84052b",
+=======
+            "version": "v5.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/yaml.git",
+                "reference": "482fb4e710e5af3e0e78015f19aa716ad953392f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/482fb4e710e5af3e0e78015f19aa716ad953392f",
+                "reference": "482fb4e710e5af3e0e78015f19aa716ad953392f",
+>>>>>>> f9b1b10d7646c0131d969721b7b34f5a336076d5
                 "shasum": ""
             },
             "require": {
@@ -1547,7 +1642,25 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2018-11-11T11:18:13+00:00"
+=======
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-04-28T17:58:55+00:00"
+>>>>>>> f9b1b10d7646c0131d969721b7b34f5a336076d5
         }
     ],
     "packages-dev": [
@@ -3019,9 +3132,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "gabordemooij/redbean": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
