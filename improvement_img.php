@@ -8,9 +8,9 @@ $data = [
     'client_secret'=>'4MBG481H7kAW2bY2Jyx5mbWtqnoKeTsai5wFqAEoi9bKovDHjiDfMPnkAKrn3Q',
     'grant_type'=>'client_credentials'
 ];
-$url = "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token=5cyrsUUgSPDdW6PqPYMq2Twt4UbBXvdY5QQXyN4GwEv3dwJpi";
-$path = 'http://pictures.govoru.com/news/2013/11/27/8676/da75219e.jpg';
-$meta = '{"space":"1", "images":[{"name":"http://pictures.govoru.com/news/2013/11/27/8676/da75219e.jpg"}], "create_new":false}';
+$url = "https://smarty.mail.ru/api/v1/photo/improve?oauth_provider=mcs&oauth_token=2ay6PvC3vFfnjN4aEj29pMSswRvA6SVQLMbWuYbJPzPizkygn3";
+$path = 'staryi_foto.jpg';
+$meta = '{"mode":["resolution", "improve"], "images":[{"name":"staryi_foto.jpg"}], "rfactor":4,"rtype":"photo"}';
 $filenames = array($path);
 $files = array();
 foreach ($filenames as $f)
@@ -53,9 +53,12 @@ $info = curl_getinfo($curl);
 
 curl_close($curl);
 $json = json_decode($response);
-$info = $json->body->objects[0];
-$info = $info->persons;
+//print_r($json);
+//echo 'test';
+//$info = $json->body->objects[0];
+//$info = $info->persons;
 //print_r($info);
+/*
 $i =0;
 $person = array('person1'=>'Джесика','person2'=>'Кристина');
 foreach($info as $item){
@@ -70,6 +73,11 @@ foreach($info as $item){
     $i++;
 }
 echo json_encode($arr);
+*/
+$image_improve = base64_decode( $json->body->improve[0]->colorized );
+header('Content-Type: image/jpeg');
+
+echo $image_improve;
 function build_data_files($boundary, $fields, $files)
 {
     $data = '';
