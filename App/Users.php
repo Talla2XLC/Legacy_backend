@@ -188,7 +188,7 @@ class Users extends Application implements iUsers
                     $randKey = rand(0,2);
                     $method = $arrayMethod[$randKey];
                     $token_auth = $this->getToken($id,$method);
-                    $array = ['error' => '', 'result' => true,'token'=>$token_auth];
+                    $array = ['error' => '', 'result' => true];
                     //$array['error']['coockie'] = setcookie('id_user', $account->id, strtotime('+ 1 month'));
                     //$array['error']['coockie'] = setcookie('var',$method,strtotime('+ 1 month'));
                     //$array['error']['coockie'] = setcookie('token',$token_auth,strtotime('+ 1 month'));
