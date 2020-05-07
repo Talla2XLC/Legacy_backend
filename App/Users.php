@@ -50,13 +50,15 @@ class Users extends Application implements iUsers
      */
     public function registrationUser($password = null, $email = null)
     {
-        $user = $_POST;
-
-        if (isset($user['password'])) {
-            $password = $user['password'];
+        //$user = $_POST;
+        $users = json_decode(file_get_contents("php://input"));
+        //print_r($users);
+        //echo $users['email'];
+        if (isset($users->password)) {
+            $password = $users->password;
         }
-        if (isset($user['email'])) {
-            $email = $user['email'];
+        if (isset($users->email)) {
+            $email = $users->email;
         }
         if (isset($email) && isset($password)) {
             $model = new Model();
@@ -96,36 +98,47 @@ class Users extends Application implements iUsers
 
     public function authUser()
     {
-        if (!empty($_POST)) {
+        $data = json_decode(file_get_contents("php://input"));
+        if (!empty($data)) {
             if (
-                (isset($_POST['password']) && isset($_POST['email'])) &&
-                (!empty($_POST['password']) && !empty($_POST['email']))
+                (isset($data->password) && isset($data->email)) &&
+                (!empty($data->password) && !empty($data->email))
             ) {
-                $password = $_POST['password'];
-                $email = $_POST['email'];
+                $password = $data->password;
+                $email = $data->email;
 
                 new Model();
-                $account = \R::findOne('account', 'email = ?', array($email));
-                if ($account != null) {
-                    $hash = $account->passwd;
+                $account_email = \R::findOne('account', 'email = ?', array($email));
+                $account_email_verified = \R::getAll('SELECT "email_verified" FROM account WHERE "email_verified" = true');
+                print_r($account_email_verified);
+                if ($account_email != null) {
+                    if($account_email_verified == null){
+                        $arr = ['error'=>'Вы еще не подтвердили почту!','result'=>false];
+                        echo json_encode($arr);
+                        return;
+                    }
+                    $hash = $account_email->passwd;
                     $result = password_verify($password, $hash);
                     if ($result) {
-                        $id_user = $account->id;
+                        $id_user = $account_email->id;
                         
                         $arrayMethod = ['45678','4#67Ga6','#f7r3Y9'];
                         $randKey = rand(0,2);
                         $method = $arrayMethod[$randKey];
                         $token = $this->getToken($id_user,$method);
                         $_SESSION['user_id'] =   $id_user;
-                        setcookie('id_user', $account->id, strtotime('+ 1 month'));
+                        setcookie('id_user', $account_email->id, strtotime('+ 1 month'));
                         setcookie('var',$method,strtotime('+ 1 month'));
                         setcookie('token',$token,strtotime('+ 1 month'));
-                        echo 'Вы авторизованы';
+                        $arr = ['error'=>'','result'=>true,'token'=>$token];
+                        echo json_encode($arr);
                     }else{
-                        echo 'Пароль не верен';
+                        $arr = ['error'=>'Пароль не верен','result'=>false];
+                        echo json_encode($arr);
                     }
                 }else{
-                    echo 'Нет такого пользователя';
+                    $arr = ['error'=>'Такая почта не существует','result'=>false];
+                    echo json_encode($arr);
                 }
             }
         }
@@ -147,11 +160,11 @@ class Users extends Application implements iUsers
     }
     public function checkUserEmail()
     {
-        $url  = $_POST;
-
-        if (isset($url['token']) && !empty($url['token'])) $token = $url['token'];
-        if (isset($url['key']) && !empty($url['key'])) $key = $url['key'];
-        if (isset($url['email']) && !empty($url['email'])) $email = $url['email'];
+        $data = json_decode(file_get_contents("php://input"));
+        //print_r($data);
+        if (isset($data->token) && !empty($data->token)) $token = $data->token;
+        if (isset($data->key) && !empty($data->key)) $key = $data->key;
+        if (isset($data->email) && !empty($data->email)) $email = $data->email;
 
         if (isset($token) && isset($key) && isset($email)) {
             //$item = $_POST;
@@ -168,26 +181,28 @@ class Users extends Application implements iUsers
                 if ($urlEmail == $userEmail) {
                     $acc = \R::exec("UPDATE account SET email_verified = true WHERE email = '" . $userEmail . "'");
                     $id = $account->id;
-                    $array = ['error' => '', 'result' => 'true'];
+                    
                     //$_SESSION['user'] = '';
                     $_SESSION['user_id'] =   $id;
                     $arrayMethod = ['45678','4#67Ga6','#f7r3Y9'];
                     $randKey = rand(0,2);
                     $method = $arrayMethod[$randKey];
                     $token_auth = $this->getToken($id,$method);
-                    $array['error']['coockie'] = setcookie('id_user', $account->id, strtotime('+ 1 month'));
-                    $array['error']['coockie'] = setcookie('var',$method,strtotime('+ 1 month'));
-                    $array['error']['coockie'] = setcookie('token',$token_auth,strtotime('+ 1 month'));
-                    $array['token'] = $token_auth;
+                    $array = ['error' => '', 'result' => true,'token'=>$token_auth];
+                    //$array['error']['coockie'] = setcookie('id_user', $account->id, strtotime('+ 1 month'));
+                    //$array['error']['coockie'] = setcookie('var',$method,strtotime('+ 1 month'));
+                    //$array['error']['coockie'] = setcookie('token',$token_auth,strtotime('+ 1 month'));
+                    //$array['token'] = $token_auth;
+                    
                     echo json_encode($array);
                 }
                 \R::close();
             } else {
-                $array = ['error' => 'Произошла ошибка во время аутентификации, попробуйте еще раз!', 'result' => 'false'];
+                $array = ['error' => 'redirection', 'result' => 'false'];
                 echo json_encode($array);
             }
         } else {
-            $array = ['error' => 1, 'result' => 'false'];
+            $array = ['error' => 'redirection', 'result' => 'false'];
             echo json_encode($array);
         }
     }
