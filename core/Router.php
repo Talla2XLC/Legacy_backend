@@ -32,6 +32,8 @@ class Router
                 $object = new $nameSpace();
                 call_user_func_array(array($object,$action),array());
             }
+        }else{
+            header('HTTP/1.1 404 Not Found');
         }
     }
 

@@ -7,6 +7,7 @@ use Core\Model;
 use Core\Application;
 use Core\Mailer;
 use App\Mail\SendMail;
+use Core\JWT;
 use \RedBeanPHP\RedException;
 
 
@@ -98,6 +99,8 @@ class Users extends Application implements iUsers
 
     public function authUser()
     {
+
+
         $data = json_decode(file_get_contents("php://input"));
         if (!empty($data)) {
             if (
@@ -110,10 +113,10 @@ class Users extends Application implements iUsers
                 new Model();
                 $account_email = \R::findOne('account', 'email = ?', array($email));
                 $account_email_verified = \R::getAll('SELECT "email_verified" FROM account WHERE "email_verified" = true');
-                print_r($account_email_verified);
+                //print_r($account_email_verified);
                 if ($account_email != null) {
-                    if($account_email_verified == null){
-                        $arr = ['error'=>'Вы еще не подтвердили почту!','result'=>false];
+                    if ($account_email_verified == null) {
+                        $arr = ['error' => 'Вы еще не подтвердили почту!', 'result' => false];
                         echo json_encode($arr);
                         return;
                     }
@@ -121,40 +124,43 @@ class Users extends Application implements iUsers
                     $result = password_verify($password, $hash);
                     if ($result) {
                         $id_user = $account_email->id;
-                        
-                        $arrayMethod = ['45678','4#67Ga6','#f7r3Y9'];
-                        $randKey = rand(0,2);
+
+                        $arrayMethod = ['45678', '4#67Ga6', '#f7r3Y9'];
+                        $randKey = rand(0, 2);
                         $method = $arrayMethod[$randKey];
-                        $token = $this->getToken($id_user,$method);
-                        $_SESSION['user_id'] =   $id_user;
-                        setcookie('id_user', $account_email->id, strtotime('+ 1 month'));
-                        setcookie('var',$method,strtotime('+ 1 month'));
-                        setcookie('token',$token,strtotime('+ 1 month'));
-                        $arr = ['error'=>'','result'=>true,'token'=>$token];
+                        //$token = $this->getToken($id_user,$method);
+                        //$_SESSION['user_id'] =   $id_user;
+                        //setcookie('id_user', $account_email->id, strtotime('+ 1 month'));
+                        //setcookie('var',$method,strtotime('+ 1 month'));
+                        //setcookie('token',$token,strtotime('+ 1 month'));
+                        $jwt = new JWT();
+                        $time = time();
+                        $token = $jwt->JWT_encode($id_user . '.' . $time);
+                        $arr = ['error' => '', 'result' => true, 'token' => $token];
                         echo json_encode($arr);
-                    }else{
-                        $arr = ['error'=>'Пароль не верен','result'=>false];
+                    } else {
+                        $arr = ['error' => 'Пароль не верен', 'result' => false];
                         echo json_encode($arr);
                     }
-                }else{
-                    $arr = ['error'=>'Такая почта не существует','result'=>false];
+                } else {
+                    $arr = ['error' => 'Такая почта не существует', 'result' => false];
                     echo json_encode($arr);
                 }
             }
         }
     }
 
-    private function getToken($id_user,$method)
+    private function getToken($id_user, $method)
     {
-        if($method == '45678'){
-            $id_user = sha1('1$|'.$id_user);
-            $token = hash('sha256',$id_user);
-        }elseif($method == '4#67Ga6'){
-            $id_user = sha1(md5('56^7$#'.$id_user));
-            $token = hash('sha256',$id_user);
-        }elseif($method == '#f7r3Y9'){
-            $id_user = md5(sha1('%679sdfx0i349u'.$id_user));
-            $token = hash('haval160,4',$id_user);
+        if ($method == '45678') {
+            $id_user = sha1('1$|' . $id_user);
+            $token = hash('sha256', $id_user);
+        } elseif ($method == '4#67Ga6') {
+            $id_user = sha1(md5('56^7$#' . $id_user));
+            $token = hash('sha256', $id_user);
+        } elseif ($method == '#f7r3Y9') {
+            $id_user = md5(sha1('%679sdfx0i349u' . $id_user));
+            $token = hash('haval160,4', $id_user);
         }
         return $token;
     }
@@ -181,19 +187,19 @@ class Users extends Application implements iUsers
                 if ($urlEmail == $userEmail) {
                     $acc = \R::exec("UPDATE account SET email_verified = true WHERE email = '" . $userEmail . "'");
                     $id = $account->id;
-                    
+
                     //$_SESSION['user'] = '';
                     $_SESSION['user_id'] =   $id;
-                    $arrayMethod = ['45678','4#67Ga6','#f7r3Y9'];
-                    $randKey = rand(0,2);
+                    $arrayMethod = ['45678', '4#67Ga6', '#f7r3Y9'];
+                    $randKey = rand(0, 2);
                     $method = $arrayMethod[$randKey];
-                    $token_auth = $this->getToken($id,$method);
+                    $token_auth = $this->getToken($id, $method);
                     $array = ['error' => '', 'result' => true];
                     //$array['error']['coockie'] = setcookie('id_user', $account->id, strtotime('+ 1 month'));
                     //$array['error']['coockie'] = setcookie('var',$method,strtotime('+ 1 month'));
                     //$array['error']['coockie'] = setcookie('token',$token_auth,strtotime('+ 1 month'));
                     //$array['token'] = $token_auth;
-                    
+
                     echo json_encode($array);
                 }
                 \R::close();
@@ -208,21 +214,92 @@ class Users extends Application implements iUsers
     }
     public function setAccount()
     {
-        if (isset($_POST['id_account']) && !empty($_POST['id_account'])) $id = $_POST['id_account'];
-        if (isset($_POST['first_name']) && !empty($_POST['first_name'])) $first_name = $_POST['first_name'];
-        if (isset($_POST['last_name']) && !empty($_POST['last_name'])) $last_name = $_POST['last_name'];
-        if (isset($_POST['phone']) && !empty($_POST['phone'])) $phone = (int) $_POST['phone'];
 
-        if (isset($id)) {
+        $data = json_decode(file_get_contents("php://input"));
+        if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
+            $jwt = new JWT();
+            $token = $_SERVER['HTTP_AUTHORIZATION'];
+            $dt = $jwt->JWT_decode($token);
+            if ($dt != null) {
+                list($id, $time) = explode('.', $dt);
+            }
+        }
+
+
+        //echo $id;
+        if (isset($data->first_name) && !empty($data->first_name)) $first_name = $data->first_name;
+        if (isset($data->last_name) && !empty($data->last_name)) $last_name = $data->last_name;
+        if (isset($data->phone) && !empty($data->phone)) $phone = (int) $data->phone;
+       
+        if (isset($id) && $id != "") {
 
             new Model();
-            var_dump($phone);
+            $user = \R::findOne('account', 'id = ?', array($id));
+            if ($user != null) {
+                if ($user->first_name != null || $user->last_name != null) {
+                    $arr = ['error' => '', 'result' => true,'info' => true];
+                    echo json_encode($arr);
+                    exit;
+                }elseif(!isset($first_name ) && !isset($last_name)){
+                    $arr = ['error' => '', 'result' => true,'info' => false];
+                    echo json_encode($arr);
+                }
+            }
+            //var_dump($phone);
             //$account = \R::load('account',$id);
-            if (isset($first_name)) \R::exec("UPDATE account SET first_name = '" . $first_name . "' WHERE id = " . $id);
-            if (isset($last_name)) \R::exec("UPDATE account SET last_name = '" . $last_name . "' WHERE id = " . $id);
-            if (isset($phone)) \R::exec("UPDATE account SET phone = " . $phone . " WHERE id = " . $id);
-            $arr = ['error' => '', 'result' => true];
+            if (isset($first_name)) $result = \R::exec("UPDATE account SET first_name = '" . $first_name . "' WHERE id = " . $id);
+            if (isset($last_name)) $result = \R::exec("UPDATE account SET last_name = '" . $last_name . "' WHERE id = " . $id);
+            if (isset($phone)) $result = \R::exec("UPDATE account SET phone = " . $phone . " WHERE id = " . $id);
+            if(isset($result) && $result == 1){
+                $arr = ['error' => '', 'result' => true,'info' => true];
+                echo json_encode($arr);
+            }
+            
+        }else{
+            $arr = ['error' => 'Вы не авторизованы', 'result' => false];
             echo json_encode($arr);
+        }
+        //echo 'ничего';
+    }
+
+    public function checkToken()
+    {
+
+        //header("Access-Control-Allow-Origin: *");
+        //header("Access-Control-Allow-Methods: POST, OPTIONS");
+        //header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+        //header("Content-Type: application/json");
+        if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
+            $token = $_SERVER['HTTP_AUTHORIZATION'];
+            $jwt = new JWT();
+            $data = $jwt->JWT_decode($token);
+            if ($data != null) {
+                list($id, $time) = explode('.', $data);
+                if (isset($data) && isset($time)) {
+                    //header('HTTP/1.0 200 OK');
+                    //http_response_code(200);
+                    $arr = ['error' => '', 'result' => true];
+                    echo json_encode($arr);
+                }
+            } else {
+                //header('Access-Control-Allow-Origin: *');
+                //header("Access-Control-Allow-Methods: HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS");
+                //header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization");
+                //header('Content-Type: application/json');
+                $method = $_SERVER['REQUEST_METHOD'];
+                if ($method == "POST") {
+                    // header('Access-Control-Allow-Origin: *');
+                    //header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization");
+                    //header("Status: 401 Unauthorized");
+                    //http_response_code(401);
+                    // header('HTTP/1.0 401 Unauthorized');
+                    $arr = ['error' => '', 'result' => false];
+                    echo json_encode($arr);
+                }
+            }
+        } else {
+            //header('HTTP/1.0 401 Unauthorized');
+            echo json_encode(['error' => '401']);
         }
     }
 }
