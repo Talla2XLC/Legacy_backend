@@ -58,21 +58,4 @@ class AuthUser
             return false;
         }        
     }
-
-    public function checkEmailUser()
-    {
-        $url = $_POST;
-        if(isset($url->token) && !empty($url['token'])) $token = $url['token'];
-        if(isset($url['key']) && !empty($url['key'])) $key = $url['key'];
-        if(isset($url['email']) && !empty($url['email'])) $email = $url['email'];
-        if(isset($token) && isset($key) && isset($email)){
-            $result = $this->checkToken($token, $key);
-            if($result){
-                new Model();
-                $account = \R::find('account', 'email = '.$email);
-                Application::dump($account);
-            }
-        }
-        
-    }
 }
