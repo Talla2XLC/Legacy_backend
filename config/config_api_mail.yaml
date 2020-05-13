@@ -1,0 +1,9 @@
+config_api_mail:
+  dev:
+      cloud:
+        bucket: "mamery_lane"
+        public_key: "wjVNWdZzrWt9EaLuRi2DoT"
+        secret: "cdWXHsw5ToJpdzpjKXW5AeE9E2Gr1Q25AULKndqcN2f4"
+      faceid:
+        public_key: "mcs2160671113.ml.vision.31WVEJ1N7Kp4ZACFGagZ3"
+        secret: "5YSMfn9x5fVqtfYGHyWT7tfgbGmFFVJQvGJfJ4Ra36MSkvyn5YYierfGgvGeDM"

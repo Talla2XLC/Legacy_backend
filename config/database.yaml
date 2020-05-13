@@ -1,0 +1,8 @@
+database:
+  dbname: "legacy"
+  user: "postgres"
+  password: "mpmegmrx"
+  host: "localhost"
+  config:
+    test: "record"
+    conf1: "test"

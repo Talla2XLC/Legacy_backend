@@ -38,3 +38,5 @@ yarn-error.log*
 
 /error.log
 /.vagrant/
+/editor/
+/images/
