@@ -99,7 +99,7 @@ class Album
             $arr = ['error'=>'','result'=>$result];
             echo json_encode($arr);
         }else{
-            $arr = ['error'=>'Токе не дествителен','result'=>false];
+            $arr = ['error'=>'Токен не дествителен','result'=>false];
             echo json_encode($arr);
         }   
     }
