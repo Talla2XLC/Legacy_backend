@@ -49,6 +49,9 @@
                 console.error(error.response.headers); // ***
 
             }); */
+            axios.post(
+                ''
+            )
             axios
             .post(
                 'http://api.memory-lane.ru/testrequest',
@@ -58,6 +61,7 @@
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
+                        'Authorization': token
                         //'Content-Type':'application/json',
                         //'Access-Control-Request-Method': 'POST',
                         //'Access-Control-Allow-Origin': 'http://legacy.loc'
