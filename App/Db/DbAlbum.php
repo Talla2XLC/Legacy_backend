@@ -17,17 +17,17 @@
         //public $account_id;
         //public $date_time = date("Y-m-d H:i:s");
         
-        public function createAlbum(string $account_id,string $album_name, array $param = null)
+        public function createAlbum(string $owner_id,string $album_name, array $param = null)
         {
-            $table_name = 'album_video';
+            $table_name = 'album';
             
             $model = new Model();
-            \R::ext('xdispense', function( $type ){
+            /* \R::ext('xdispense', function( $type ){
                 return \R::getRedBean()->dispense( $type );
-            });
-            $album = \R::xdispense( $table_name );
+            }); */
+            $album = \R::dispense( $table_name );
             $album->album_name = $album_name;            
-            $album->owner_id = $account_id;
+            $album->owner_id = $owner_id;
             if($param != null){
                 foreach($param as $key=>$val){
                     $album->$key = $val;
@@ -37,21 +37,32 @@
             return \R::store($album);
         }
 
-        public function updateAlbum($id, $album_name)
+        public function updateAlbum($id, $album_name,$content = null)
         {
-            $album = \R::load('album_photo', $id);
+            $album = \R::load('album', $id);
             $album->album_name = $album_name;
-            \R::store($album);
+            if($content != null) $album->content = $content;
+            $result = \R::store($album);
+            return $result;
         }
 
-        public function readAlbum()
+        public function readAlbum($id)
         {
-            /*
-            $albums = \R::loadAll('album_photo',9);
-            foreach($albums as $album){
-                echo $album->album_name.'<br>';
+            $model = new Model();
+            $albums = \R::loadAll('album',$id);
+            if($albums != null){
+                foreach($albums as $album){
+                    $array['id'][] = $album->id;
+                    $array['album_name'][] = $album->album_name;
+                    $array['content'][] = $album->content;
+                    $array['date_created'][] = $album->date_created;
+                    $array['date_updated'][] = $album->date_updated;
+                }
+                return $array;
+            }else{
+                return null;
             }
-            */
+            
         }
 
         public function deleteAlbum($id, $album_name)

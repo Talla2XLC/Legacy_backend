@@ -230,32 +230,40 @@ class Users extends Application implements iUsers
         if (isset($data->first_name) && !empty($data->first_name)) $first_name = $data->first_name;
         if (isset($data->last_name) && !empty($data->last_name)) $last_name = $data->last_name;
         if (isset($data->phone) && !empty($data->phone)) $phone = (int) $data->phone;
-       
+        if (isset($data->email) && !empty($data->email)) $email =  $data->email;
+
         if (isset($id) && $id != "") {
 
             new Model();
             $user = \R::findOne('account', 'id = ?', array($id));
             if ($user != null) {
-                if ($user->first_name != null || $user->last_name != null) {
-                    $arr = ['error' => '', 'result' => true,'info' => true];
+                $arr = [
+                    'error' => '',
+                    'result' => true,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'phone' => $user->phone,
+                    'email' => $user->email
+                ];
+                if (isset($phone) || isset($last_name) || isset($first_name)) {
+                    if (isset($first_name)) $result = \R::exec("UPDATE account SET first_name = '" . $first_name . "' WHERE id = " . $id);
+                    if (isset($last_name)) $result = \R::exec("UPDATE account SET last_name = '" . $last_name . "' WHERE id = " . $id);
+                    if (isset($phone)) $result = \R::exec("UPDATE account SET phone = " . $phone . " WHERE id = " . $id);
+                    if (isset($result) && $result == 1) {
+                        $arr = ['error' => '', 'result' => true];
+                        echo json_encode($arr);
+                    }
+                }else{
                     echo json_encode($arr);
                     exit;
-                }elseif(!isset($first_name ) && !isset($last_name)){
-                    $arr = ['error' => '', 'result' => true,'info' => false];
-                    echo json_encode($arr);
                 }
+                
             }
             //var_dump($phone);
             //$account = \R::load('account',$id);
-            if (isset($first_name)) $result = \R::exec("UPDATE account SET first_name = '" . $first_name . "' WHERE id = " . $id);
-            if (isset($last_name)) $result = \R::exec("UPDATE account SET last_name = '" . $last_name . "' WHERE id = " . $id);
-            if (isset($phone)) $result = \R::exec("UPDATE account SET phone = " . $phone . " WHERE id = " . $id);
-            if(isset($result) && $result == 1){
-                $arr = ['error' => '', 'result' => true,'info' => true];
-                echo json_encode($arr);
-            }
+
             
-        }else{
+        } else {
             $arr = ['error' => 'Вы не авторизованы', 'result' => false];
             echo json_encode($arr);
         }
