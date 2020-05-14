@@ -9,66 +9,49 @@ class Album
 {
     public function create()
     {
-        
-        if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
-            $jwt = new JWT();
-            $token = $_SERVER['HTTP_AUTHORIZATION'];
-            $dt = $jwt->JWT_decode($token);
-            if ($dt != null) {
-                list($id, $time) = explode('.', $dt);
-            }
-        }
-        
-        if(isset($id) && !empty($id)){
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+
+        if (!empty($id) && $id != 0) {
             $data = file_get_contents(json_decode("php://input"));
-            if(isset($data['album_name']) && !empty($data['album_name'])){
+            if (isset($data['album_name']) && !empty($data['album_name'])) {
                 $dbAlbum = new DbAlbum();
-                if(isset($data->description) && !empty($data->description)){
+                if (isset($data->description) && !empty($data->description)) {
                     $desc = $data->decscription;
-                }else{
+                } else {
                     $desc = null;
                 }
-                $id = $dbAlbum->createAlbum($id,$data['album_name'],['decription'=>$desc]);
-                $arr = ['error'=>'','result'=>true];
+                $id = $dbAlbum->createAlbum($id, $data['album_name'], ['decription' => $desc]);
+                $arr = ['error' => '', 'result' => true];
                 echo json_encode($arr);
-            }else{
-                $arr = ['error'=>'Пустые поле название Альбома'];
+            } else {
+                $arr = ['error' => 'Пустые поле название Альбома'];
                 echo json_encode($arr);
             }
-        }else{
-            $arr = ['error'=>'','result'=>false];
+        } else {
+            $arr = ['error' => '', 'result' => false];
             echo json_encode($arr);
         }
-        
     }
 
     public function getAlbum()
     {
-        if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
-            $jwt = new JWT();
-            $token = $_SERVER['HTTP_AUTHORIZATION'];
-            $dt = $jwt->JWT_decode($token);
-            if ($dt != null) {
-                list($id, $time) = explode('.', $dt);
-            }else{
-                $arr = ['error'=>'Токе не дествителен','result'=>false];
-                echo json_encode($arr);
-                exit;
-            }
-        }
-        if(isset($id) && !empty($id)){
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+
+        if ($id != 0 && !empty($id)) {
             //$data = file_get_contents(json_decode("php://input"));
             $dbAlbum = new DbAlbum();
-            
-            if($arr != null){
-                $arr = $dbAlbum->readAlbum($id);
-                $arr = ['content'=>$arr,'result'=>true];
+
+            $arr = $dbAlbum->readAlbum($id);
+                        
+            if ($arr != null) {
+                $arr = ['content' => $arr, 'result' => true];
                 echo json_encode($arr);
-            }else{
-                $arr = ['error'=>'Нет записей','result'=>false];
+            } else {
+                $arr = ['error' => 'Нет записей', 'result' => false];
                 echo json_encode($arr);
             }
-            
         }
     }
 
@@ -80,26 +63,30 @@ class Album
             $dt = $jwt->JWT_decode($token);
             if ($dt != null) {
                 list($id, $time) = explode('.', $dt);
-            }else{
-                $arr = ['error'=>'Токе не дествителен','result'=>false];
+            } else {
+                $arr = ['error' => 'Токен не действителен', 'result' => false];
                 echo json_encode($arr);
                 exit;
             }
         }
-        if(isset($id) && !empty($id)){
+        if (isset($id) && !empty($id)) {
             $dbAlbum = new DbAlbum();
             $data = file_get_contents(json_decode("php://input"));
-            if(isset($data->album_name) && !empty($data->album_name)) $album_name = $data->album_name;
+            if (isset($data->album_name) && !empty($data->album_name)) $album_name = $data->album_name;
 
-            if(isset($data->content) && !empty($data->content)) {$content = $data->content;} else{ $content = null;};
+            if (isset($data->content) && !empty($data->content)) {
+                $content = $data->content;
+            } else {
+                $content = null;
+            };
 
-            
-            $result = $dbAlbum->updateAlbum($id,$album_name,$content);
-            $arr = ['error'=>'','result'=>$result];
+
+            $result = $dbAlbum->updateAlbum($id, $album_name, $content);
+            $arr = ['error' => '', 'result' => $result];
             echo json_encode($arr);
-        }else{
-            $arr = ['error'=>'Токен не дествителен','result'=>false];
+        } else {
+            $arr = ['error' => 'Токен не действителен', 'result' => false];
             echo json_encode($arr);
-        }   
+        }
     }
 }
