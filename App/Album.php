@@ -13,15 +13,16 @@ class Album
         $id = $jwt->checkToken();
 
         if (!empty($id) && $id != 0) {
-            $data = file_get_contents(json_decode("php://input"));
-            if (isset($data['album_name']) && !empty($data['album_name'])) {
+            $data = json_decode(file_get_contents("php://input"));
+            print_r($data);
+            if (isset($data->album_name) && !empty($data->album_name)) {
                 $dbAlbum = new DbAlbum();
                 if (isset($data->description) && !empty($data->description)) {
-                    $desc = $data->decscription;
+                    $desc = $data->description;
                 } else {
                     $desc = null;
                 }
-                $id = $dbAlbum->createAlbum($id, $data['album_name'], ['decription' => $desc]);
+                $id = $dbAlbum->createAlbum($id, $data->album_name, ['description' => $desc]);
                 $arr = ['error' => '', 'result' => true];
                 echo json_encode($arr);
             } else {
@@ -36,6 +37,9 @@ class Album
 
     public function getAlbum()
     {
+        //header('HTTP/1.1 404 Not found');
+        //echo 'testGet';
+        header('application/json');
         $jwt = new JWT();
         $id = $jwt->checkToken();
 
@@ -44,7 +48,7 @@ class Album
             $dbAlbum = new DbAlbum();
 
             $arr = $dbAlbum->readAlbum($id);
-                        
+
             if ($arr != null) {
                 $arr = ['content' => $arr, 'result' => true];
                 echo json_encode($arr);
@@ -52,6 +56,9 @@ class Album
                 $arr = ['error' => 'Нет записей', 'result' => false];
                 echo json_encode($arr);
             }
+        }else{
+            $arr = ['error' => 'Токе не дествителен', 'result' => false];
+            echo json_encode($arr);
         }
     }
 

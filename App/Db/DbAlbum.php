@@ -49,16 +49,11 @@
         public function readAlbum($id)
         {
             $model = new Model();
-            $albums = \R::loadAll('album',$id);
+            $albums = \R::findAll('album',"owner_id = ?",[$id]);
+            //Application::dump($albums);
             if($albums != null){
-                foreach($albums as $album){
-                    $array['id'][] = $album->id;
-                    $array['album_name'][] = $album->album_name;
-                    $array['content'][] = $album->content;
-                    $array['date_created'][] = $album->date_created;
-                    $array['date_updated'][] = $album->date_updated;
-                }
-                return $array;
+            
+                return $albums;
             }else{
                 return null;
             }

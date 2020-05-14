@@ -1,7 +1,7 @@
 config:
   dev:
     configdb:
-      host: "localhost"
+      host: "193.168.3.129"
       user: "postgres"
       password: "W}J}W`PH&n{>x2nf>%[+^Ex=JAX8N^Et~Er"
       dbname: "dev_memory_lane"

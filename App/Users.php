@@ -246,6 +246,7 @@ class Users extends Application implements iUsers
                     'email' => $user->email
                 ];
                 if (isset($phone) || isset($last_name) || isset($first_name)) {
+
                     if (isset($first_name)) $result = \R::exec("UPDATE account SET first_name = '" . $first_name . "' WHERE id = " . $id);
                     if (isset($last_name)) $result = \R::exec("UPDATE account SET last_name = '" . $last_name . "' WHERE id = " . $id);
                     if (isset($phone)) $result = \R::exec("UPDATE account SET phone = " . $phone . " WHERE id = " . $id);
