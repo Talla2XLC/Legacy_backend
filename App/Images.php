@@ -4,38 +4,53 @@ namespace App;
 
 use Core\S3Libs;
 use App\Db\DbPictures;
+use Core\JWT;
 
 class Images
 {
     public function getImages()
     {
-        $dbPictures = new DbPictures();
+        header('application/json');
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        if ($id != 0) {
+            $dbPictures = new DbPictures();
 
-        $imgs =  $dbPictures->select('11');
-        $s3Libs = new S3Libs();
-        foreach($imgs as $img){
-            $urls[] = $s3Libs->getURL($img,'9');
+            $imgs =  $dbPictures->select($id);
+            $s3Libs = new S3Libs();
+            foreach ($imgs as $img) {
+                $urls[] = $s3Libs->getURL($img, $id);
+            }
+            //header('Access-Control-Allow-Origin: *');
+            //header("Content-type: application/json; charset=utf-8");
+            $arr = ['content'=>$urls,'result'=>true];
+            echo json_encode($arr);
+        }else{
+            $arr = ['error' => 'Не верный токен','result' => false];
+            echo json_encode($arr);
         }
-        //header('Access-Control-Allow-Origin: *');
-        //header("Content-type: application/json; charset=utf-8");
-        echo json_encode($urls);
-        
     }
     public function upload()
     {
-        $result = $this->upladFile();
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        if($id != 0){
+            $data = file_get_contents(json_decode("php://input"));
+            $result = $this->upladFile($id,$data->id_album);
+        }
         
+
         //$dbPictures->insert($id,$idAlbum,$url);
         if (is_array($result)) {
             //$i = 0;
             //print_r($result);
             echo json_encode($result);
-           
         }
         //print_r($arr);
     }
-    protected function upladFile()
+    protected function upladFile($id_user,$id_album)
     {
+
         $dbPictures = new DbPictures();
         if (!empty($_FILES)) {
             $images = $_FILES['images']['name'];
@@ -70,19 +85,17 @@ class Images
                         $id = '10';
 
                         $uploadResult = $s3Libs->uploadCloud($image, $imageDir, $id);
-                        if($uploadResult == true){
-                            $dbPictures->insert('10','12',$image);
+                        if ($uploadResult == true) {
+                            $dbPictures->insert($id_user, $id_album, $image);
                             $result['result'][$n]  = true;
                             $result['error'][$n] = '';
                             $result['img'][$n] = $nImage;
-                            
-                        }else{
+                        } else {
                             $result['result'][$n] = false;
                             $result['error'][$n] = 2;
                             $result['img'][$n] = $nImage;
                         }
                         unlink($imageDir);
-                        
                     } else {
                         unlink($imageDir);
                         $result['result'][$n] = false;
@@ -94,7 +107,6 @@ class Images
                     $result['result'][$n] = false;
                     $result['error'][$n] = 1;
                     $result['img'][$n] = $nImage;
-
                 }
 
                 $n++;
