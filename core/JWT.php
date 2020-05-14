@@ -6,6 +6,26 @@ class JWT
 {
     private const KEY = '02f6cda5a10b5d98449b9ff9616ef159988bd279408a5a7a46956af7d42d';
     private const CIPHER = "aes-128-gcm";
+
+    public function checkToken()
+    {
+        //Application::dump( $_SERVER );
+        if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
+
+            $token = $_SERVER['HTTP_AUTHORIZATION'];
+            //echo $token;
+            $dt = $this->JWT_decode($token);
+            if ($dt != null) {
+                list($id, $time) = explode('.', $dt);
+                return $id;
+            }else{
+                return 0;
+            }
+        }else{
+            //echo 'Пустое значение';
+            return 0;
+        }
+    }
     public function JWT_encode($original)
     {
         $base64_origin = base64_encode($original);

@@ -3,6 +3,9 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.php?path=$1 [NC,L,QSA]
 
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
 #ErrorDocument 400 /index.php
 #ErrorDocument 401 /index.php
 #ErrorDocument 403 /index.php
