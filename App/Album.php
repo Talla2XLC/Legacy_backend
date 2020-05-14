@@ -18,7 +18,6 @@ class Album
                 list($id, $time) = explode('.', $dt);
             }
         }
-        //echo 'test';
         
         if(isset($id) && !empty($id)){
             $data = file_get_contents(json_decode("php://input"));
