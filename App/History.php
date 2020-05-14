@@ -7,3 +7,7 @@ use Core\Application;
 use Core\JWT;
 use \RedBeanPHP\RedException;
 
+class Hitory
+{
+    
+}

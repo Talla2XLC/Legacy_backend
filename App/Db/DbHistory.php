@@ -51,7 +51,7 @@
             
         }
 
-        public function deleteAlbum($id)
+        public function deleteHistory($id)
         {
 
             $history = \R::load('unit_story', $id);
