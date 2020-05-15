@@ -39,7 +39,7 @@ class Album
     {
         //header('HTTP/1.1 404 Not found');
         //echo 'testGet';
-        header('application/json');
+        //header('application/json');
         $jwt = new JWT();
         $id = $jwt->checkToken();
 

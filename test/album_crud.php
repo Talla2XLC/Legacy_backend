@@ -22,7 +22,7 @@
         let text = $("#text").val();
         axios
             .post(
-                '/db/getAlbum', {
+                'http://api.memory-lane.ru/db/getAlbum', {
                     'album_name':`${title}`,
                     'description': `${text}`
                 }, {
@@ -36,13 +36,13 @@
                 })
             .then(res => {
                 console.log(res);
-                var content = res.data.content;
-                console.log(content);
-                /*
+                //var content = res.data.content;
+                //console.log(content);
+                
                 for(volume in content){
                    console.log( content[volume].album_name);
                 }
-                */
+                
                 //$("#content").html(content[2].album_name);
                 //console.log(res);
             })
