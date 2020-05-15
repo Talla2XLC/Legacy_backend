@@ -11,7 +11,8 @@
         "symfony/config": "^5.0",
         "symfony/yaml": "^5.0",
         "aws/aws-sdk-php": "^3.135",
-        "gabordemooij/redbean": "^5.5"
+        "gabordemooij/redbean": "^5.5",
+        "erusev/parsedown": "^1.7"
     },
     "autoload": {
         "psr-4": {
