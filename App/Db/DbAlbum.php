@@ -41,7 +41,7 @@
         {
             $album = \R::load('album', $id);
             $album->album_name = $album_name;
-            if($content != null) $album->content = $content;
+            if($content != null) $album->description = $content;
             $result = \R::store($album);
             return $result;
         }
