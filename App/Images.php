@@ -10,7 +10,7 @@ class Images
 {
     public function getImages()
     {
-        header('application/json');
+        //header('application/json');
         $jwt = new JWT();
         $id = $jwt->checkToken();
         if ($id != 0) {
@@ -32,6 +32,7 @@ class Images
     }
     public function upload()
     {
+        
         $jwt = new JWT();
         $id = $jwt->checkToken();
         if($id != 0){
@@ -82,9 +83,9 @@ class Images
                     move_uploaded_file($tmp, $imageDir);
                     if (exif_imagetype($imageDir) == IMAGETYPE_JPEG) {
                         $s3Libs = new S3Libs();
-                        $id = '10';
+                        //$id = '10';
 
-                        $uploadResult = $s3Libs->uploadCloud($image, $imageDir, $id);
+                        $uploadResult = $s3Libs->uploadCloud($image, $imageDir, $id_user);
                         if ($uploadResult == true) {
                             $dbPictures->insert($id_user, $id_album, $image);
                             $result['result'][$n]  = true;

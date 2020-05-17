@@ -25,9 +25,19 @@ class Users extends Application implements iUsers
 
         $limit = '30';
         $start = '0';
-        $account = \R::findCollection('account', "LIMIT $limit OFFSET $start");
-        $i = 0;
-
+        //$account = \R::findCollection('account', "LIMIT $limit OFFSET $start");
+        $result = \R::getAll("SELECT 'SELECT ' ||
+        ARRAY_TO_STRING(ARRAY(SELECT COLUMN_NAME::VARCHAR(50)
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_NAME='account' AND
+                COLUMN_NAME NOT IN ('passwd')
+            ORDER BY ORDINAL_POSITION
+        ), ', ') || ' FROM account'");
+        $sql = $result[0]['?column?'];
+        $data = \R::getAll($sql);
+        echo json_encode($data);
+        //$i = 0;
+        /*
         while ($item = $account->next()) {
             $array[$i]['first_name'] = $item['first_name'];
             $array[$i]['last_name'] = $item['last_name'];
@@ -36,8 +46,9 @@ class Users extends Application implements iUsers
             $array[$i]['email'] = $item['email'];
             $i++;
         }
+        */
         //self::dump($array);
-        echo json_encode($array);
+        //echo json_encode($array);
         //$name = $account->first_name;
 
     }
@@ -215,7 +226,8 @@ class Users extends Application implements iUsers
     public function setAccount()
     {
 
-        $data = json_decode(file_get_contents("php://input"));
+        $data = json_decode(file_get_contents("php://input"), true);
+        // print_r($data);
         if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
             $jwt = new JWT();
             $token = $_SERVER['HTTP_AUTHORIZATION'];
@@ -223,47 +235,75 @@ class Users extends Application implements iUsers
             if ($dt != null) {
                 list($id, $time) = explode('.', $dt);
             }
-        }
+        }      
 
-
-        //echo $id;
-        if (isset($data->first_name) && !empty($data->first_name)) $first_name = $data->first_name;
-        if (isset($data->last_name) && !empty($data->last_name)) $last_name = $data->last_name;
-        if (isset($data->phone) && !empty($data->phone)) $phone = (int) $data->phone;
-        if (isset($data->email) && !empty($data->email)) $email =  $data->email;
 
         if (isset($id) && $id != "") {
-
+            //var_dump($asked_to_introduce);
             new Model();
-            $user = \R::findOne('account', 'id = ?', array($id));
-            if ($user != null) {
-                $arr = [
-                    'error' => '',
-                    'result' => true,
-                    'first_name' => $user->first_name,
-                    'last_name' => $user->last_name,
-                    'phone' => $user->phone,
-                    'email' => $user->email
-                ];
-                if (isset($phone) || isset($last_name) || isset($first_name)) {
+            $result = \R::getAll("SELECT 'SELECT ' ||
+        ARRAY_TO_STRING(ARRAY(SELECT COLUMN_NAME::VARCHAR(50)
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_NAME='account' AND
+                COLUMN_NAME NOT IN ('passwd')
+            ORDER BY ORDINAL_POSITION
+        ), ', ') || ' FROM account WHERE id = {$id}'");
+            $sql = $result[0]['?column?'];
+            $dbData = \R::getAll($sql);
+            //print_r($data);
+            //echo json_encode($data);
+            //$user = \R::findOne('account', 'id = ?', array($id));
+            if (!empty($data)) {
+                //$data = (array) $data;
+                //print_r($data);
+                $dbDataUser = \R::load('account', $id);
+                if (is_array($data)) {
+                    // echo 'is array';
+                    $sql = "UPDATE account SET";
+                    $i = 0;
+                    $count = count($data);
+                    foreach ($data as $key => $item) {
 
-                    if (isset($first_name)) $result = \R::exec("UPDATE account SET first_name = '" . $first_name . "' WHERE id = " . $id);
-                    if (isset($last_name)) $result = \R::exec("UPDATE account SET last_name = '" . $last_name . "' WHERE id = " . $id);
-                    if (isset($phone)) $result = \R::exec("UPDATE account SET phone = " . $phone . " WHERE id = " . $id);
-                    if (isset($result) && $result == 1) {
+                        if ($i == 0) {
+                            $sql .= " {$key} = '{$item}'";
+                        } else {
+                            $sql .= ", {$key} = '{$item}'";
+                        }
+
+                        $i++;
+                    }
+                    $sql .= " WHERE id = {$id}";
+                    $result = \R::exec($sql);
+                    if ($result) {
                         $arr = ['error' => '', 'result' => true];
                         echo json_encode($arr);
                     }
-                }else{
-                    echo json_encode($arr);
-                    exit;
                 }
-                
+            } else {
+                echo json_encode($dbData[0]);
+                exit;
             }
+            /*
+            if (isset($phone) || isset($last_name) || isset($first_name) || isset($asked_to_introduce)) {
+
+                if (isset($first_name)) $result = \R::exec("UPDATE account SET first_name = '" . $first_name . "' WHERE id = " . $id);
+                if (isset($last_name)) $result = \R::exec("UPDATE account SET last_name = '" . $last_name . "' WHERE id = " . $id);
+                if (isset($phone)) $result = \R::exec("UPDATE account SET phone = " . $phone . " WHERE id = " . $id);
+                if (isset($asked_to_introduce)) $result = \R::exec("UPDATE account SET asked_to_introduce = " . $asked_to_introduce . " WHERE id = " . $id);
+                if (isset($result) && $result == 1) {
+                    $arr = ['error' => '', 'result' => true];
+                    echo json_encode($arr);
+                }
+            } else {
+                echo json_encode($data[0]);
+                exit;
+            }
+            */
+
             //var_dump($phone);
             //$account = \R::load('account',$id);
 
-            
+
         } else {
             $arr = ['error' => 'Вы не авторизованы', 'result' => false];
             echo json_encode($arr);

@@ -14,7 +14,7 @@ class Album
 
         if (!empty($id) && $id != 0) {
             $data = json_decode(file_get_contents("php://input"));
-            print_r($data);
+            //print_r($data);
             if (isset($data->album_name) && !empty($data->album_name)) {
                 $dbAlbum = new DbAlbum();
                 if (isset($data->description) && !empty($data->description)) {

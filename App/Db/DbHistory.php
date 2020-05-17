@@ -38,7 +38,9 @@
         {
             new Model();
             
-            return  \R::findAll('unit_story','owner_id = ?',[$id]);
+            $result = \R::findAll('unit_story','owner_id = ?',[$id]);
+            $array = \R::exportAll($result);
+            return $array;
         }
 
         public function updateHistory($id, $story_name,$content = null)
