@@ -23,10 +23,11 @@
         let id = 2;
         axios
             .post(
-                'http://legacy.loc/db/getHistory', {
-                    'first_name':`Грачья`,
-                    'phone': `6348374837948394`,
+                'http://api.memory-lane.ru/get/images', {
+                    //'first_name':`Грачья`,
+                    //'phone': `6348374837948394`,
                     //'story_id': id
+                    'id_album': 28
                 }, {
                     headers: {
                         //'Content-Type': 'multipart/form-data',

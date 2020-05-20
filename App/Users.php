@@ -120,16 +120,17 @@ class Users extends Application implements iUsers
             ) {
                 $password = $data->password;
                 $email = $data->email;
-
+                
                 new Model();
                 $account_email = \R::findOne('account', 'email = ?', array($email));
-                $account_email_verified = \R::getAll('SELECT "email_verified" FROM account WHERE "email_verified" = true');
+                $account_email_verified = \R::getAll("SELECT email_verified FROM account WHERE email = '{$email}' AND email_verified = true");
                 //print_r($account_email_verified);
                 if ($account_email != null) {
                     if ($account_email_verified == null) {
-                        $arr = ['error' => 'Вы еще не подтвердили почту!', 'result' => false];
+                        $arr = ['error'=>'Вы не подтвердили почту','result'=>false];
                         echo json_encode($arr);
-                        return;
+                        exit;
+                        
                     }
                     $hash = $account_email->passwd;
                     $result = password_verify($password, $hash);

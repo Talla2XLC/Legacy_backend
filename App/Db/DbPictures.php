@@ -45,15 +45,28 @@ class DbPictures
     {
         new Model();
         //$result = \R::exec('SELECT * FROM "relation_album_photo" WHERE album_id = '.$idAlbum);
-        $results = \R::getAll('SELECT * FROM relation_album_photo WHERE album_id = '.$idAlbum);
+        $results = \R::getAll('SELECT * FROM relation_album_photo WHERE "album_id" = '.$idAlbum);
         //print_r($results);
-        foreach($results as $result){
-            //print_r($result);
-            $photos = \R::load('unit_photo',$result['photo_id']);
-            
-            $arr_photos[] = $photos['content_url'];
+        if(!empty($results)){
+            $i = 0;
+            foreach($results as $result){
+                //print_r($result);
+                $photos = \R::loadAll('unit_photo',$result['photo_id']);
+                print_r($photos);
+                $arr_photos[$i]['id'] = $photos['id'];
+                $arr_photos[$i]['content_url'] = $photos['content_url'];
+                $arr_photos[$i]['coordinates'] = $photos['coordinates'];
+                $arr_photos[$i]['reference'] = $photos['reference'];
+                $arr_photos[$i]['photo_name'] = $photos['photo_name'];
+                $arr_photos[$i]['author'] = $photos['author'];
+                $arr_photos[$i]['photo_name'] = $photos['photo_name'];
+                $i++;
+            }
+            return $arr_photos;
+        }else{
+            return null;
         }
         
-        return $arr_photos;
+        
     }
 }
