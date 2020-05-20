@@ -23,5 +23,6 @@ return $rout =  [
     '/test/jwt' => 'TestJWT@getJWT',
     '/checkToken' => 'Users@checkToken',
     '/testrequest' => 'Request@test',
-    '/errorRequest' => 'Error@info'//если код ошибки то выводим сообшение об ошибке
+    '/errorRequest' => 'Error@info',//если код ошибки то выводим сообшение об ошибке
+    '/search' => 'Search@searchData'
 ];
