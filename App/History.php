@@ -3,10 +3,9 @@
 namespace App;
 
 use App\Db\DbHistory;
-use Db\DbAlbum;
 use Core\JWT;
 
-class Hitory
+class History
 {
     public function createHistory()
     {
@@ -14,6 +13,7 @@ class Hitory
         $id = $jwt->checkToken();
         if (!empty($id) && $id != 0) {
             $data = json_decode(file_get_contents("php://input"));
+            //print_r($data);
             if (isset($data->story_name) && !empty($data->story_name)) {
                 $dbHistory = new DbHistory();
                 if (isset($data->content) && !empty($data->content)) {
@@ -21,15 +21,15 @@ class Hitory
                 } else {
                     $content = null;
                 }
-                $id = $dbHistory->createHistory($id, $data->story_name, $data->content);
+                $id = $dbHistory->createHistory($id, $data->story_name, $content);
                 $arr = ['error' => '', 'result' => true];
                 echo json_encode($arr);
             } else {
-                $arr = ['error' => 'Пустое поле название Истории'];
+                $arr = ['error' => 'Пустое поле название Истории', 'result' => false];
                 echo json_encode($arr);
             }
         } else {
-            $arr = ['error' => '', 'result' => false];
+            $arr = ['error' => 'Токен не действителен', 'result' => false];
             echo json_encode($arr);
         }
     }
@@ -41,15 +41,16 @@ class Hitory
 
         if ($id != 0 && !empty($id)) {
             $dbHistorys = new DbHistory();
-            $arr = $dbHistorys->readHistorys();
+            $arr = $dbHistorys->readHistorys($id);
             if ($arr != null) {
+                $arr = ['content' => $arr, 'result' => true];
                 echo json_encode($arr);
             } else {
-                $arr = ['error' => 'Нет записей', 'result' => false];
+                $arr = ['error' => 'Нет записей', 'result' => null];
                 echo json_encode($arr);
             }
         } else {
-            $arr = ['error' => 'Токен не дествителен', 'result' => false];
+            $arr = ['error' => 'Токен не действителен', 'result' => false];
             echo json_encode($arr);
         }
     }
@@ -58,20 +59,42 @@ class Hitory
     {
         $jwt = new JWT();
         $id = $jwt->checkToken();
-        $data = json_decode(file_get_contents("php://input"));// сда передовать id истории которую нужно показать
-        $idHistory = $data->id;
+        //$data = json_decode(file_get_contents("php://input"));
         if ($id != 0 && !empty($id)) {
             $dbHistory = new DbHistory();
-            $arr = $dbHistory->readHistory($idHistory);
+            $arr = $dbHistory->readHistory($id);
             echo json_encode($arr);
         } else {
-            $arr = ['error' => 'Токен не дествителен', 'result' => false];
+            $arr = ['error' => 'Токен не действителен', 'result' => false];
             echo json_encode($arr);
         }
     }
 
     public function updateHistory()
     {
-        //Грач извини сделал что смог, спать хочу, уже позно да и после работы я.
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        if (!empty($id) && $id != 0) {
+            $data = json_decode(file_get_contents("php://input"));
+            //print_r($data);
+            if (isset($data->story_name) && !empty($data->story_name) && isset($data->story_id)) {
+                $dbHistory = new DbHistory();
+                if (isset($data->content) && !empty($data->content)) {
+                    $content = $data->content;
+                } else {
+                    $content = null;
+                }
+                $story_id = (int) $data->story_id;
+                $id = $dbHistory->updateHistory($story_id, $data->story_name, $content);
+                $arr = ['error' => '', 'result' => true];
+                echo json_encode($arr);
+            } else {
+                $arr = ['error' => 'Пустое поле название Истории', 'result' => false];
+                echo json_encode($arr);
+            }
+        } else {
+            $arr = ['error' => 'Токен не действителен', 'result' => false];
+            echo json_encode($arr);
+        }
     }
 }

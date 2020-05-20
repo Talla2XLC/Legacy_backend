@@ -20,7 +20,7 @@
             console.log(album);
             $.ajax({
                 type:'post',
-                url:'http://legacy.loc/db/setAlbum',
+                url:'http://legacy.loc/db/getUsers/all',
                 data:'name_album='+album,
                 success:function(info){
                     $("#info").text(info);

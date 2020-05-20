@@ -20,11 +20,14 @@
     $("#button").click(function(){
         let title = $("#title").val();
         let text = $("#text").val();
+        let id = 2;
         axios
             .post(
-                '/db/getAlbum', {
-                    'album_name':`${title}`,
-                    'description': `${text}`
+                'http://api.memory-lane.ru/get/images', {
+                    //'first_name':`Грачья`,
+                    //'phone': `6348374837948394`,
+                    //'story_id': id
+                    'id_album': 28
                 }, {
                     headers: {
                         //'Content-Type': 'multipart/form-data',
@@ -36,10 +39,10 @@
                 })
             .then(res => {
                 console.log(res);
-                var content = res.data.content;
-                console.log(content);
-                /*
-                for(volume in content){
+                //var content = res.data.content;
+                //console.log(content);
+                
+                /*for(volume in content){
                    console.log( content[volume].album_name);
                 }
                 */

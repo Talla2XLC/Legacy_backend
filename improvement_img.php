@@ -1,4 +1,5 @@
 <?php
+header('Content');
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -8,7 +9,7 @@ $data = [
     'client_secret'=>'4MBG481H7kAW2bY2Jyx5mbWtqnoKeTsai5wFqAEoi9bKovDHjiDfMPnkAKrn3Q',
     'grant_type'=>'client_credentials'
 ];
-$url = "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token=5cyrsUUgSPDdW6PqPYMq2Twt4UbBXvdY5QQXyN4GwEv3dwJpi";
+$url = "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token=EeMGiQ3qah52CKHt3DwJZ1ZBQbfi7dp9JsV4fFHeZsqBbPfz3";
 $path = 'http://pictures.govoru.com/news/2013/11/27/8676/da75219e.jpg';
 $meta = '{"space":"1", "images":[{"name":"http://pictures.govoru.com/news/2013/11/27/8676/da75219e.jpg"}], "create_new":false}';
 $filenames = array($path);

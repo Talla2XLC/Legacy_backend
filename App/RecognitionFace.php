@@ -11,7 +11,7 @@ class RecognitionFace
     {
         $mainFaceRec = new MainFaceRecognition();
 
-        $resurlt = $mainFaceRec->set($mainFaceRec->token,'persona.jpeg',1);
+        $resurlt = $mainFaceRec->set($mainFaceRec->token,'/images/persona.jpeg',1);
         //Application::dump($resurlt);
         
     }
