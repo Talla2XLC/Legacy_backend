@@ -18,7 +18,7 @@ class Application
     {
         $class =  get_class($this);
         $config  = new Configuration('config');
-        $config->addConfig('config.yaml');
+        //$config->addConfig('config.yaml');
         //self::dump($config->getConfig());
         //$this->config_db = $config->get('config.dev.configdb');
             //self::dump($this->config_db);
@@ -39,7 +39,8 @@ class Application
         }
         if($class == 'Core\MainFaceRecognition'){
             $config->addConfig('config_api_mail.yaml');
-            $this->config_id_face = $config->get('config_api_mail.dev.faceid');
+            //print_r($config);
+            $this->config_id_face = $config->get('config_api_mail.dev.cloud');
             //self::dump($this->config_id_face);
         }
                 

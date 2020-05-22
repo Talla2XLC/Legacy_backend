@@ -9,6 +9,7 @@ class MainFaceRecognition extends Application
     {
         parent::__construct();
         $service_token = 'EeMGiQ3qah52CKHt3DwJZ1ZBQbfi7dp9JsV4fFHeZsqBbPfz3';
+        //print_r($this->config_id_face);
         $answerApi = $this->authApi($this->config_id_face);
         $answerApi = json_decode($answerApi);
         //$this->token = $answerApi->access_token;

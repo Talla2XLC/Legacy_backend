@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recognize</title>
+    <style>
+        #image {}
+
+        .container {}
+
+        .faceId {
+            position: absolute;
+            /*display: none;*/
+            border: 2px solid #15dd26;
+            color: yellowgreen;
+            top: 123px;
+            left: 30px;
+            height: 100px;
+            width: 100px;
+            display: inline-block;
+        }
+        .infoFace{
+            position: absolute;
+        }
+        .infoFace div{
+            background:hsla(0, 0%, 35%, 0.651);
+            color:#ccc;
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="origin"></div>
+    <div class="container">
+        <img src="https://img.buzzfeed.com/buzzfeed-static/static/2016-04/14/12/enhanced/webdr01/original-31890-1460651276-12.jpg" alt="" id="image" width="600">
+    </div>
+
+    <div id="position"></div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#image').mousemove(function (e) {
+                $('#position').html("<strong>Позиция по оси X :</strong>" + e.pageX + "<br />" +
+                    "<strong> Позиция по оси Y :</strong> " + e.pageY);
+            });
+            image = $('#image');
+            //console.log(image.width());
+            $('.container').css({ 'width': image.width() + 'px', 'height': image.height() + 'px' });
+            $.ajax({
+                url: '/recognize',
+                type: 'POST',
+                data: {},
+                success: function (data) {
+                    console.log(data);
+                    
+                    JSdata = JSON.parse(data);
+                    //console.log(image.width());
+                    //console.log(JSdata);
+                    length = JSdata.length;
+                    widthImage = getWidthImg();
+                    $("#origin").hide();
+                    //console.log(widthImage);
+                    for (var i = 0; i < JSdata.length; i++) {
+                        rel = widthImage/600;
+                        //console.log(rel);
+                        var width = JSdata[i].WH[0] / rel;
+                        var height = JSdata[i].WH[1] / rel;
+                        var left = JSdata[i].coord[0] / rel;
+                        var top = JSdata[i].coord[1] / rel;
+                        var tag = JSdata[i].tag;
+                        var sex = JSdata[i].sex;
+                        var emotion = JSdata[i].emotion;
+                        var age = JSdata[i].age;
+                        $('.container').append('<div id="person' + i + '" class="faceId"></div>');
+                        person = $('#person' + i);
+                        person.css({ 'width': width, 'height': height, 'top': top, 'left': left }).append('<div class="infoFace"><div>'+tag+'</div><br></div>');
+                        //infoFace = $('#person'+i+ ' .infoFace');
+                        //infoFace.append('<div>Эмоция: '+emotion+'</div><br>');
+                        //infoFace.append('<div>Лет: '+age+'</div><br>');
+                        //infoFace.append('<div>Пол: '+sex+'</div>');
+                        $('#person'+i+' .infoFace').css({'top':height+5});
+                    }
+                    
+                    
+                },
+                error: function (error) {
+                    console.log($error);
+                }
+            });
+        });
+        function getWidthImg(){
+            srcImage = image.attr('src');
+                    $("<img/>").on('load',function () {
+                       // alert('W=' + this.width + ' H=' + this.height);
+                       widthImage = this.width;
+                       //alert(widthImage);
+                       
+                    }).attr({"src":srcImage,'id':'originImg'}).appendTo('#origin');
+                    return width =  $("#originImg").width();
+                    //console.log(width);
+                    //console.log($("#originImg"));
+
+        }
+    </script>
+</body>
+
+</html>
