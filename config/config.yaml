@@ -7,9 +7,9 @@ config:
       dbname: "dev_memory_lane"
   dev:
     configdb:
-      host: "localhost",
-      user: "postgres",
-      pawwword: "",
+      host: "localhost"
+      user: "postgres"
+      password: ""
       dbname: "memory_lane"
   mail:
       Host: "smtp.yandex.ru"

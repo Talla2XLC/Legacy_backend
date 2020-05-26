@@ -4,6 +4,8 @@ namespace App;
 
 use Core\Application;
 use Core\MainFaceRecognition;
+use Core\JWT;
+use Core\Model;
 
 class RecognitionFace
 {
@@ -17,15 +19,40 @@ class RecognitionFace
     }
     public function recognizePersone()
     {
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        new Model();
+        //$data = json_decode(file_get_contents("php://input"));
+        if ($id != 0 && !empty($id)) {
+            
+        } else {
+            $arr = ['error' => 'Токен не действителен', 'result' => false];
+            echo json_encode($arr);
+            exit;
+        }
         $data = json_decode(file_get_contents("php://input"));
         $mainFaceRec = new MainFaceRecognition();
-        $resurlt = $mainFaceRec->recognize($mainFaceRec->token,$data->img_url);
-        $json = json_decode($resurlt);
+        foreach($data->img_urls as $img_url){
+            $resurlts[] = $mainFaceRec->recognize($mainFaceRec->token,$img_url);
+        }
+        
+        $json = json_decode($resurlts[0]);
         //print_r($json);
         //Application::dump($res);
         // тут блок получение базу данных имен персоны
         //$person = array('person1'=>'Дженнифер Энистон','person2'=>'Дэ́вид Ло́уренс','person3'=>'Спанч Боб','person4'=>'Вин Дизел','person5'=>'Скала Джонсон');
         //конец блока
+        $persons = \R::findAll("person","creator_id = ?",[$id]);
+        if(!empty($persons)){
+            foreach($persons as $person)
+            $arrPerson[] = $person->id;
+        }
+        /*
+        {
+            token:space:{"persse2":id,"coord":[l,t,w,h]},
+
+        };
+        */
         
         $info = $json->body->objects[0];
         $info = $info->persons;

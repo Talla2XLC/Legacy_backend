@@ -3,24 +3,21 @@
 namespace App;
 
 use App\Db\DbHistory;
+use App\Db\DbPersons;
 use Core\JWT;
 
-class History
+class Persons
 {
-    public function createHistory()
+    public function setPerson()
     {
         $jwt = new JWT();
         $id = $jwt->checkToken();
         if (!empty($id) && $id != 0) {
             $data = json_decode(file_get_contents("php://input"));
             //print_r($data);
-            if (isset($data->story_name) && !empty($data->story_name)) {
-                $dbHistory = new DbHistory();
-                if (isset($data->content) && !empty($data->content)) {
-                    $content = $data->content;
-                } else {
-                    $content = null;
-                }
+            if (isset($data->first_name) && !empty($data->first_name)) {
+                $dbHistory = new DbPersons();
+                
                 foreach($data as $key => $val){
                     if($key != 'story_name' || $key != 'content'){
                         $dataStorys[$key] = $val; 
@@ -31,7 +28,8 @@ class History
                     $dataStorys = null;
                 }
                 //print_r($dataStorys);
-                $id = $dbHistory->createHistory($id, $data->story_name, $content,$dataStorys);
+
+                $id = $dbHistory->create($id, $dataStorys);
                 $arr = ['error' => '', 'result' => true];
                 echo json_encode($arr);
             } else {
@@ -65,14 +63,14 @@ class History
         }
     }
 
-    public function getHistory()
+    public function getPerson()
     {
         $jwt = new JWT();
         $id = $jwt->checkToken();
         //$data = json_decode(file_get_contents("php://input"));
         if ($id != 0 && !empty($id)) {
-            $dbHistory = new DbHistory();
-            $arr = $dbHistory->readHistory($id);
+            $dbHistory = new DbPersons();
+            $arr = $dbHistory->readPerson($id);
             echo json_encode($arr);
         } else {
             $arr = ['error' => 'Токен не действителен', 'result' => false];
@@ -80,7 +78,7 @@ class History
         }
     }
 
-    public function updateHistory()
+    public function updatePerson()
     {
         $jwt = new JWT();
         $id = $jwt->checkToken();
@@ -88,7 +86,7 @@ class History
             $data = json_decode(file_get_contents("php://input"));
             //print_r($data);
             if (isset($data->story_name) && !empty($data->story_name) && isset($data->story_id)) {
-                $dbHistory = new DbHistory();
+                $dbPerson = new DbPersons();
                 if (isset($data->content) && !empty($data->content)) {
                     $content = $data->content;
                 } else {
@@ -105,7 +103,7 @@ class History
                     $dataStorys = null;
                 }
                 
-                $id = $dbHistory->updateHistory($story_id, $data->story_name, $content,$dataStorys);
+                $id = $dbPerson->updatePerson($story_id, $data->story_name, $content,$dataStorys);
                 $arr = ['error' => '', 'result' => true];
                 echo json_encode($arr);
             } else {
@@ -116,5 +114,12 @@ class History
             $arr = ['error' => 'Токен не действителен', 'result' => false];
             echo json_encode($arr);
         }
+    }
+
+    public function delete(){
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        $dbPerson = new DbPersons();
+        $result = $dbPerson->delete($id);
     }
 }

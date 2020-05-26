@@ -24,7 +24,7 @@ class DbPictures
                 $table_photo->reference = true;
             }
             $id_photo = \R::store($table_photo);
-            echo $id_photo."\n";
+            //echo $id_photo."\n";
 
             \R::exec('INSERT INTO "relation_album_photo" ("album_id","photo_id") VALUES ('.$idAlbum.','.$id_photo.')');
             /*
@@ -51,15 +51,21 @@ class DbPictures
             $i = 0;
             foreach($results as $result){
                 //print_r($result);
-                $photos = \R::loadAll('unit_photo',$result['photo_id']);
-                print_r($photos);
-                $arr_photos[$i]['id'] = $photos['id'];
-                $arr_photos[$i]['content_url'] = $photos['content_url'];
-                $arr_photos[$i]['coordinates'] = $photos['coordinates'];
-                $arr_photos[$i]['reference'] = $photos['reference'];
-                $arr_photos[$i]['photo_name'] = $photos['photo_name'];
-                $arr_photos[$i]['author'] = $photos['author'];
-                $arr_photos[$i]['photo_name'] = $photos['photo_name'];
+                $id_photo = $result['photo_id'];
+                //echo $id_photo;
+                $photos = \R::find('unit_photo',' id = ?',[$id_photo]);
+               // print_r($photos);
+                //echo  $photos->content_url;
+                foreach($photos as $photo){
+                    $arr_photos[$i]['id'] = $photo->id;
+                $arr_photos[$i]['content_url'] = $photo->content_url;
+                $arr_photos[$i]['coordinates'] = $photo['coordinates'];
+                $arr_photos[$i]['reference'] = $photo['reference'];
+                $arr_photos[$i]['photo_name'] = $photo['photo_name'];
+                $arr_photos[$i]['author'] = $photo['author'];
+                }
+                
+                //$arr_photos[$i]['photo_name'] = $photos['photo_name'];
                 $i++;
             }
             return $arr_photos;

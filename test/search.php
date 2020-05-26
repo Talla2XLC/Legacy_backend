@@ -19,7 +19,7 @@
     
     $("#button").click(function(){
         //let title = $("#title").val();
-        let text = "Tex";
+        let text = "est";
         axios
             .post(
                 '/search', {
@@ -38,6 +38,9 @@
                 console.log(res);
                 var content = res.data.content;
                 console.log(content);
+                $("#content").html("<pre>"+content[0].album.album_name+"</pre>")
+                //jsonData = JSON.parse(content);
+                //console.log(jsonData);
                 /*
                 for(volume in content){
                    console.log( content[volume].album_name);

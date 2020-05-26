@@ -14,7 +14,7 @@ class Db extends Application
     {
         $config  = new Configuration('config');
         $config->addConfig('config.yaml');
-        $config_db = $config->get('config.dev.configdb');
+        $config_db = $config->get('config.prod.configdb');
         class_alias('\RedBeanPHP\R', '\R');
         //Application::dump($config_db);
         \R::setup(

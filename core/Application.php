@@ -18,12 +18,7 @@ class Application
     {
         $class =  get_class($this);
         $config  = new Configuration('config');
-        //$config->addConfig('config.yaml');
-        //self::dump($config->getConfig());
-        //$this->config_db = $config->get('config.dev.configdb');
-            //self::dump($this->config_db);
-         
-        //self::dump($this->config_mail);
+        
         if($class == 'Core\Mailer'){
             $confMail = $config->get('config.dev.mail');
             if($confMail != null){

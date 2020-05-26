@@ -4,8 +4,6 @@
 
     use Core\Application;
     use Core\Model;
-    use Core\Db;
-    use \RedBeanPHP\RedException;
     use Core\JWT;
 
     class Search
@@ -18,16 +16,19 @@
             if (!empty($id) && $id != 0) {
                 $data = json_decode(file_get_contents("php://input"));
             } else {
-                $arr = ['error' => 'Пустой запрос поиска'];
+                $arr = ['error' => 'Не правильный токен','result'=>false];
                 echo json_encode($arr);
                 exit();
             }
 
             $model = new Model();
-            $search = '%'.$data->search.'%';
-
-            $album = \R::findAll('album', 'owner_id = ? AND album_name LIKE = ?', [$id, $search]);
+            $search  = trim($data->search);
+            $search = '%'.$search.'%';
+           // echo  $search;
+            //echo $id;
+            $album = \R::findAll('album', "owner_id = ? AND album_name LIKE ?", [$id, $search]);
             $i = 0;
+            //print_r($album);
             if(!empty($album)){
                 foreach($album as $value){
                     $array[$i]['album']['album_name'] = $value->album_name;
@@ -36,7 +37,7 @@
                 }
             }
             
-            $audio = \R::findAll('unit_audio', 'owner_id = ? AND audio_name LIKE = ?', [$id, $search]);
+            $audio = \R::findAll('unit_audio', 'owner_id = ? AND audio_name LIKE ?', [$id, $search]);
             $i = 0;
             if(!empty($audio)){
                 foreach($audio as $value){
@@ -46,7 +47,7 @@
                 }
             }
 
-            $photo = \R::findAll('unit_photo', 'owner_id = ? AND photo_name LIKE = ?', [$id, $search]);
+            $photo = \R::findAll('unit_photo', 'owner_id = ? AND photo_name LIKE ?', [$id, $search]);
             $i = 0;
             if(!empty($photo)){
                 foreach($photo as $value){
@@ -56,7 +57,7 @@
                 }
             }
 
-            $story = \R::findAll('unit_story', 'owner_id = ? AND story_name LIKE = ?', [$id, $search]);
+            $story = \R::findAll('unit_story', 'owner_id = ? AND story_name LIKE ?', [$id, $search]);
             $i = 0;
             if(!empty($story)){
                 foreach($story as $value){
@@ -66,7 +67,7 @@
                 }
             }
 
-            $video = \R::findAll('unit_video', 'owner_id = ? AND video_name LIKE = ?', [$id, $search]);
+            $video = \R::findAll('unit_video', 'owner_id = ? AND video_name LIKE ?', [$id, $search]);
             $i = 0;
             if(!empty($video)){
                 foreach($video as $value){
@@ -77,9 +78,11 @@
             }
 
             if(!empty($array) && is_array($array)){
-                $arr = ['conten' => $array, 'result' => true];
+                $arr = ['content' => $array, 'result' => true];
+                echo json_encode($arr);
             } else {
                 $arr = ['error' => '', 'result' => true];
+                echo json_encode($arr);
             }
 
         }

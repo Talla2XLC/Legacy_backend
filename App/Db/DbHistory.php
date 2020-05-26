@@ -9,8 +9,8 @@
 
 
     class DbHistory
-    {
-        public function createHistory(string $account_id, string $story_name, string $content)
+{
+        public function createHistory(string $account_id, string $story_name, string $content,array $all = null)
         {
             $table_name = 'unit_story';
 
@@ -23,6 +23,12 @@
             $history->owner_id = $account_id;
             $history->story_name = $story_name;
             $history->content = $content;
+            //print_r($all);
+            $history->date = (string) $all['date'];
+            $history->city = (string) $all['city'];
+            $history->author = (string) $all['author'];
+            //$history->tags = $all['tags'];            
+            
             \R::store($history);
             $result = true;
         }
@@ -43,12 +49,19 @@
             return $array;
         }
 
-        public function updateHistory($id, $story_name,$content = null)
+        public function updateHistory($id, $story_name,$content = null,array $all = null)
         {
             new Model();
             $story = \R::load('unit_story',$id);
             $story->story_name = $story_name;
+
             if($content != null) $story->content = $content;
+            if($all != null && is_array($all)){
+                foreach($all as $key => $val){
+                    $story->$key = $val;
+                    \R::store($story);
+                }
+            }
             $result = \R::store($story);
             return $result;
         }
