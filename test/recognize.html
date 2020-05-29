@@ -35,7 +35,7 @@
 <body>
     <div id="origin"></div>
     <div class="container">
-        <img src="https://img.buzzfeed.com/buzzfeed-static/static/2016-04/14/12/enhanced/webdr01/original-31890-1460651276-12.jpg" alt="" id="image" width="600">
+        <img src="../images/friends2.jpeg" alt="" id="image" width="600">
     </div>
 
     <div id="position"></div>
@@ -72,13 +72,13 @@
                         var height = JSdata[i].WH[1] / rel;
                         var left = JSdata[i].coord[0] / rel;
                         var top = JSdata[i].coord[1] / rel;
-                        var tag = JSdata[i].tag;
+                        var tag = JSdata[i].name;
                         var sex = JSdata[i].sex;
                         var emotion = JSdata[i].emotion;
                         var age = JSdata[i].age;
                         $('.container').append('<div id="person' + i + '" class="faceId"></div>');
                         person = $('#person' + i);
-                        person.css({ 'width': width, 'height': height, 'top': top, 'left': left }).append('<div class="infoFace"><div>'+tag+'</div><br></div>');
+                        person.css({ 'width': width, 'height': height, 'top': top, 'left': left }).append('<div class="infoFace"><div>'+tag+'</div><br><div> '+sex+' </div><br><div> '+age+' </div></div>');
                         //infoFace = $('#person'+i+ ' .infoFace');
                         //infoFace.append('<div>Эмоция: '+emotion+'</div><br>');
                         //infoFace.append('<div>Лет: '+age+'</div><br>');

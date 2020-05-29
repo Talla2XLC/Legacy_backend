@@ -6,6 +6,7 @@ use Core\S3Libs;
 use App\Db\DbPictures;
 use Core\Application;
 use Core\JWT;
+use Core\Model;
 
 class Images
 {
@@ -25,9 +26,7 @@ class Images
                 foreach ($imgs as $key=>$img) {
                     $imgs[$key]['urls'] = $s3Libs->getURL($img['content_url'], $id);
                 }
-                //header('Access-Control-Allow-Origin: *');
-                //header("Content-type: application/json; charset=utf-8");
-                //$imgs[99]['urls'] = $urls;
+                
                 $arr = ['content' => $imgs, 'result' => true];
                 echo json_encode($arr);
             } else {
@@ -113,6 +112,8 @@ class Images
                                     $result['error'][$n] = 2;
                                     $result['img'][$n] = $nImage;
                                 }
+                                $RecFace = new RecognitionFace();
+                                $regResult = $RecFace->recognizePersone($image);
                                 unlink($imageDir);
                             } else {
                                 unlink($imageDir);
@@ -189,5 +190,13 @@ class Images
         }else{
             return $result = ['error'=>'Не тот тип данных','result'=>false];
         }
+    }
+
+    public function delete()
+    {
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        new Model();
+    $result = \R::exec("DELETE FROM unit_photo WHERE id = {$id}");
     }
 }

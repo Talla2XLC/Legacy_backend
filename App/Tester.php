@@ -13,6 +13,9 @@ class Tester
 
         $user->authUser('12345','hrach@hrach.ru');
     }
-    
+    public function testRecognition(){
+        $recogn = new RecognitionFace();
+        $recogn->recognizePersone('images/friends2.jpeg');
+    }
 
 }

@@ -58,10 +58,10 @@ class MainFaceRecognition extends Application
           curl_close($curl);
           return $response;
     }
-    public function recognize($token,$picture)
+    public function recognize($token,$picture,$spaceID)
     {
         $url = "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token={$token}";
-        $meta = '{"space":"1","images":[{"name":"'.$picture.'"}],"create_new":false}';
+        $meta = '{"space":"'.$spaceID.'","images":[{"name":"'.$picture.'"}],"create_new":false}';
         $filenames = array($picture);
         $files = array();
         foreach ($filenames as $f) {
