@@ -40,9 +40,9 @@ class Album
         //header('HTTP/1.1 404 Not found');
         //echo 'testGet';
         //header('application/json');
-        //$jwt = new JWT();
-        //$id = $jwt->checkToken();
-        $id = 82;
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        //$id = 82;
         if ($id != 0 && !empty($id)) {
             //$data = file_get_contents(json_decode("php://input"));
             $dbAlbum = new DbAlbum();
