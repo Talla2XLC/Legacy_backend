@@ -16,6 +16,7 @@ class Images
         $data = json_decode(file_get_contents("php://input"));
         $jwt = new JWT();
         $id = $jwt->checkToken();
+
         if ($id != 0) {
             $dbPictures = new DbPictures();
             $id_album = $data->id_album;
@@ -43,8 +44,10 @@ class Images
 
         $jwt = new JWT();
         $id = $jwt->checkToken();
+        //$id = 82;
         if ($id != 0) {
             //$data = json_decode(file_get_contents("php://input"));
+            
             $id_album = $_POST['id_album'];
             $result = $this->upladFile($id, $id_album);
         }
@@ -64,6 +67,7 @@ class Images
         //Application::dump($_POST);
         //Application::dump($_FILES);
         //print_r($_FILES);
+        $RecFace = new RecognitionFace();
         $dbPictures = new DbPictures();
         if (!empty($_FILES)) {
             $images = $_FILES['images']['name'];
@@ -103,7 +107,7 @@ class Images
     
                                 $uploadResult = $s3Libs->uploadCloud($image, $imageDir, $id_user);
                                 if ($uploadResult == true) {
-                                    $dbPictures->insert($id_user, $id_album, $image);
+                                    $id_photo = $dbPictures->insert($id_user, $id_album, $image);
                                     $result['result'][$n]  = true;
                                     $result['error'][$n] = '';
                                     $result['img'][$n] = $nImage;
@@ -112,8 +116,8 @@ class Images
                                     $result['error'][$n] = 2;
                                     $result['img'][$n] = $nImage;
                                 }
-                                $RecFace = new RecognitionFace();
-                                $regResult = $RecFace->recognizePersone($image);
+                                
+                                $regResult = $RecFace->recognizePersone($id_user,$imageDir,$id_photo);
                                 unlink($imageDir);
                             } else {
                                 unlink($imageDir);
@@ -159,11 +163,15 @@ class Images
                                 //$id = '10';
     
                                 $uploadResult = $s3Libs->uploadCloud($image, $imageDir, $id_user);
+                                
+                                
+                                $regResult = $RecFace->recognizePersone($imageDir,$image);
                                 if ($uploadResult == true) {
                                     $dbPictures->insert($id_user, $id_album, $image);
                                     $result['result']  = true;
                                     $result['error'] = '';
                                     $result['img'] = $nImage;
+                                    unlink($imageDir);
                                 } else {
                                     $result['result'] = false;
                                     $result['error'] = 2;
@@ -192,11 +200,17 @@ class Images
         }
     }
 
-    public function delete()
+    public function delete($id_photo = null)
     {
         $jwt = new JWT();
         $id = $jwt->checkToken();
         new Model();
-    $result = \R::exec("DELETE FROM unit_photo WHERE id = {$id}");
+        if($id_photo == null){
+            $data = json_decode(file_get_contents("php://input"));
+            $result = \R::exec("DELETE FROM unit_photo WHERE id = {$data->id_photo}");
+        }else{
+            $result = \R::exec("DELETE FROM unit_photo WHERE id = {$id_photo}");
+        }
+        
     }
 }

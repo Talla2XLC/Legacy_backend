@@ -145,4 +145,61 @@ class MainFaceRecognition extends Application
         $data .= "--" . $delimiter . "--" . $eol;
         return $data;
     }
+
+    public function getResultRecognize($token,$image,$space){
+        $resurlts = $this->recognize($token, $image, $space);
+            //echo $resurlts;
+            //print_r($resurlts);
+            if (!empty($resurlts)) {
+
+                $json = json_decode($resurlts);
+                //Application::dump($json);
+                $info = $json->body->objects[0];
+                $info = $info->persons;
+                $i = 0;
+                foreach ($info as $item) {
+                    //print_r($item);
+                    $n = 0;
+                    foreach ($item->coord as $key => $coord) {
+                        if ($key == 1) {
+                            $height1 = $coord;
+                            $coordArr[$n] = $coord;
+                        }
+                        if ($key == 3) $height2 = $coord;
+                        if (!empty($width1) && !empty($width2))
+                            $height = $height2 - $height1;//
+                        if ($key == 0) {
+                            $width1 = $coord;
+                            $coordArr[$n] = $coord;
+                        }
+                        if ($key == 2) $width2 = $coord;
+                        if (!empty($height1) && !empty($height2))
+                            $width = $width2 - $width1;
+                        $n++;
+                    }
+                    $arr[$i]['WH'] = [$width, $height];
+                    //echo $width.'.'.$height.'/';
+                    $arr[$i]['coord'] = $coordArr;
+                    //echo $item->tag;
+                    //Application::dump($personsID);
+
+                   
+                        $arr[$i]['name'] = "не известно";
+                        if (!empty($item->sex)) $arr[$i]['sex'] = $item->sex;
+                        if (!empty($item->emotion)) $arr[$i]['emotion'] = $this->emotion[$item->emotion];
+                        if (!empty($item->age)) $arr[$i]['age'] = $item->age;
+                        //$photo->coordinates = json_encode($arr);
+                        //\R::store($photo);
+                    
+
+
+                    $i++;
+                    //echo $i;
+
+                }
+                return $arr;
+            }else{
+                return false;
+            }
+    }
 }

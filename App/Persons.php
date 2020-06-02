@@ -5,6 +5,7 @@ namespace App;
 use App\Db\DbHistory;
 use App\Db\DbPersons;
 use Core\JWT;
+use Core\S3Libs;
 
 class Persons
 {
@@ -13,10 +14,13 @@ class Persons
         $jwt = new JWT();
         $id = $jwt->checkToken();
         if (!empty($id) && $id != 0) {
-            $data = json_decode(file_get_contents("php://input"));
+            //$data = json_decode(file_get_contents("php://input"));
+            $data = $_POST;
+            //print_r($_POST);
+            //print_r($_FILES);
             //print_r($data);
-            if (isset($data->first_name) && !empty($data->first_name)) {
-                $dbHistory = new DbPersons();
+            if (isset($data['first_name']) && !empty($data['first_name'])) {
+                $dbPersons= new DbPersons();
                 
                 foreach($data as $key => $val){
                     if($key != 'story_name' || $key != 'content'){
@@ -28,8 +32,45 @@ class Persons
                     $dataStorys = null;
                 }
                 //print_r($dataStorys);
+                //print_r($_FILES);
+                if(isset($_FILES['ico_url'])){
+                    $image = $_FILES['ico_ulr']['name'];
+                    $n = 0;
+                    $nImage = $image;
+                    $image_sh = sha1($image);
+                    $img = '';
+                    for ($i = 0; $i < 15; $i++) {
+                        $math = rand(0, 39);
+                        $img .= $image_sh[$math];
+                    }
+                    $image = $img . $nImage;
+                    $type = $_FILES['images']['type'];
+                    switch ($type) {
+                        case 'image/png':
+                            $type = true;
+                            break;
+                        case 'image/jpeg':
+                            $type = true;
+                            break;
+                        default:
+                            $type = false;
+                    }
+                    $tmp = $_FILES['images']['tmp_name'];
+                    $imageDir = 'temp/' . $image;
+                    if ($type) {
+                        move_uploaded_file($tmp, $imageDir);
+                        $exifImage = exif_imagetype($imageDir);
+                        if($exifImage == IMAGETYPE_JPEG || $exifImage == IMAGETYPE_PNG) {
+                            $s3Libs = new S3Libs();
 
-                $id = $dbHistory->create($id, $dataStorys);
+                            $uploadResult = $s3Libs->uploadCloud($image, $imageDir, $id);
+                            unlink($imageDir);
+                           
+                        }
+                    }
+                }       
+                    
+                $id = $dbPersons->create($id, $dataStorys,$image);
                 $arr = ['error' => '', 'result' => true];
                 echo json_encode($arr);
             } else {

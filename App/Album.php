@@ -40,16 +40,17 @@ class Album
         //header('HTTP/1.1 404 Not found');
         //echo 'testGet';
         //header('application/json');
-        $jwt = new JWT();
-        $id = $jwt->checkToken();
-
+        //$jwt = new JWT();
+        //$id = $jwt->checkToken();
+        $id = 82;
         if ($id != 0 && !empty($id)) {
             //$data = file_get_contents(json_decode("php://input"));
             $dbAlbum = new DbAlbum();
 
             $arr = $dbAlbum->readAlbum($id);
-
+            //print_r($arr);
             if ($arr != null) {
+                
                 $arr = ['content' => $arr, 'result' => true];
                 echo json_encode($arr);
             } else {
@@ -78,7 +79,7 @@ class Album
         }
         if (isset($id) && !empty($id)) {
             $dbAlbum = new DbAlbum();
-            $data = file_get_contents(json_decode("php://input"));
+            $data = json_decode(file_get_contents("php://input"));
             if (isset($data->album_name) && !empty($data->album_name)) $album_name = $data->album_name;
 
             if (isset($data->content) && !empty($data->content)) {
@@ -95,5 +96,16 @@ class Album
             $arr = ['error' => 'Токен не действителен', 'result' => false];
             echo json_encode($arr);
         }
+    }
+
+    public function delete(){
+        $data = json_decode(file_get_contents("php://input"));
+        $dbAlbum = new DbAlbum();
+        $images = new Images();
+        $photoIds = \R::getAll("SELECT phpto_id FROM relation_album_photo WHERE album_id = {$data->id_album}");
+        foreach($photoIds as $id_photo){
+            $images->delete($id_photo['photo_id']);
+        }
+        $dbAlbum->deleteAlbum($data->id_album);
     }
 }

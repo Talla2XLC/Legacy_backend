@@ -6,7 +6,7 @@
     use Core\Model;
     use Core\Db;
     use \RedBeanPHP\RedException;
-
+    use Core\S3Libs;
 
     class DbAlbum
     {
@@ -50,17 +50,39 @@
         {
             $model = new Model();
             $albums = \R::findAll('album',"owner_id = ?",[$id]);
+            $array = \R::exportAll($albums);
             //Application::dump($albums);
+            $s3Libs = new S3Libs();
+            $i = 0;
+            foreach($array as $album){
+            $photoIds = \R::getAll("SELECT photo_id FROM relation_album_photo WHERE album_id = {$album['id']}");
+                //print_r($photoIds);
+                //echo '----photo-----';
+                $n = 0;
+                foreach($photoIds as $photoID){
+                    //echo $photoID['photo_id'].'#'."\n";
+                    $photo = \R::findOne('unit_photo','id = ?',[$photoID['photo_id']]);
+                    //$photo$s3Libs->getURL($photo['content_url'], $id);
+                    $arrPhoto = \R::exportAll($photo);
+                    $arrPhoto = $arrPhoto[0];
+                    $arrPhoto['content_url'] = $s3Libs->getURL($photo['content_url'], $id);
+                    $photos[] = $arrPhoto;
+                    $n++;
+                }
+                //echo '-----endphoto----';
+                $array[$i]['photo'] = $photos;
+                $i++;
+            }
             if($albums != null){
             
-                return $albums;
+                return $array;
             }else{
                 return null;
             }
             
         }
 
-        public function deleteAlbum($id, $album_name)
+        public function deleteAlbum($id)
         {
             $album = \R::load('album_photo', $id);
             \R::trash($album);

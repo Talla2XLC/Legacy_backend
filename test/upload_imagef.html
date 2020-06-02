@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Поле загрузки файлов, которое мы заслужили</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+</head>
+<body>
+	<form id="upload-container" method="POST" action="/upload/images">
+		<img id="upload-image" src="../images/cloud-computing.svg">
+		<div>
+			
+			<input id="file-input" type="file" name="images" multiple>
+			<label for="file-input">Выберите файл</label>
+			<span>или перетащите его сюда</span>
+		</div>
+	</form>
+</body>
+</html>

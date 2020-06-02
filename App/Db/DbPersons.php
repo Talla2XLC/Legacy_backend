@@ -10,7 +10,7 @@ use \RedBeanPHP\RedException;
 
 class DbPersons
 {
-    public function create(int $creator_id, array $all = null)
+    public function create(int $creator_id, array $all = null,$image)
     {
         $table_name = 'person';
 
@@ -21,15 +21,16 @@ class DbPersons
 
         $person = \R::xdispense($table_name);
         $person->creator_id = $creator_id;
-        //$history->story_name = $story_name;
-        //$history->content = $content;
-        //print_r($all);
-        //$history->date = (string) $all['date'];
-        //$history->city = (string) $all['city'];
-        //$history->author = (string) $all['author'];
-        //$history->tags = $all['tags'];    
+        $person->ico_url = $image;
+            
         foreach($all as $key => $val){
-            $person->$key = $val;
+            if($key == "ico_url")
+            {
+                $person->key = $image;
+            }else{
+                $person->$key = $val;
+            }
+            
             \R::store($person);
         }
         
@@ -50,6 +51,7 @@ class DbPersons
         
         $result = \R::findAll('person',' creator_id = ?',[$id]);
         $array = \R::exportAll($result);
+
         return $array;
     }
 

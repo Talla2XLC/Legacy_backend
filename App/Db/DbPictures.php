@@ -14,12 +14,17 @@ class DbPictures
         $photo = 'unit_photo';
         $relation_album = 'relation_album_photo';
         try{
+            $account = \R::findOne('account','id = ?',[$idAccount]);
+            $first_name = $account->first_name;
+            $last_name = $account->last_name;
+            $author = $first_name.' '.$last_name;
             \R::ext('xdispense', function( $type ){
                 return \R::getRedBean()->dispense( $type );
             });
             $table_photo = \R::xdispense( $photo );
             $table_photo->owner_id = $idAccount;
             $table_photo->content_url = $url;
+            $table_photo->author = $author;
             if($reference == true){
                 $table_photo->reference = true;
             }
@@ -34,7 +39,7 @@ class DbPictures
             \R::store($r_album);
             */
             \R::close();
-            return true;
+            return $id_photo;
         }catch(RedException $e){
             return $e;
         }

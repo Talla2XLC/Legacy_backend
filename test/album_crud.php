@@ -23,11 +23,11 @@
         let id = 2;
         axios
             .post(
-                'http://api.memory-lane.ru/get/images', {
+                'http://api.memory-lane.ru/db/getAlbum', {
                     //'first_name':`Грачья`,
                     //'phone': `6348374837948394`,
                     //'story_id': id
-                    'id_album': 28
+                    //'id_album': 2
                 }, {
                     headers: {
                         //'Content-Type': 'multipart/form-data',
@@ -39,6 +39,7 @@
                 })
             .then(res => {
                 console.log(res);
+                $("#content").text(res);
                 //var content = res.data.content;
                 //console.log(content);
                 
@@ -52,6 +53,7 @@
             .catch(function(error) {
                 //console.error("Error response:");
                 console.log(error); // ***
+                $("#content").text(error);
                 //console.error(error.response.status); // ***
                 //console.error(error.response.headers); // ***
 

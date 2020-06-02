@@ -7,6 +7,7 @@ return $rout =  [
     '/db/setAlbum' => 'Album@create',
     '/db/getAlbum' => 'Album@getAlbum',
     '/db/updateAlbum' => 'Album@updateAlbum',
+    '/db/deleteAlbum' => 'Album@delete',
     '/db/setHistory' => 'History@createHistory',
     '/db/getHistory' => 'History@getHistory',
     '/db/updateHistory' => 'History@updateHistory',
