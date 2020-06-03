@@ -22,12 +22,13 @@
         let text = $("#text").val();
         let id = 2;
         axios
-            .post(
-                'http://api.memory-lane.ru/db/getAlbum', {
+            .delete(
+                'http://api.memory-lane.ru/db/deletePerson', {
                     //'first_name':`Грачья`,
                     //'phone': `6348374837948394`,
                     //'story_id': id
                     //'id_album': 2
+                    'id':100
                 }, {
                     headers: {
                         //'Content-Type': 'multipart/form-data',

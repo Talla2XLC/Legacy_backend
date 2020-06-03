@@ -7,10 +7,8 @@
 
     Class CalculatingDatePhoto
     {
-        public function calculatingDatePhoto(){
-            $data = json_decode(file_get_contents("php://input"));
-            $birthDate = $data->birthDate;
-            $age = $data->age;
+        public function calculatingDatePhoto($birthDate,$age){
+           
             
             do{
                 $i = 0;
@@ -22,7 +20,7 @@
 
             if ($photoDate != null) {
                 $photoDate = ['content' => $photoDate, 'result' => true];
-                echo json_encode($photoDate);
+                return $photoDate;
             }
         }
         

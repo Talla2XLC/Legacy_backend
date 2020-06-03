@@ -4,6 +4,8 @@ namespace App;
 
 use App\Db\DbAlbum;
 use Core\JWT;
+use Core\Model;
+use Core\S3Libs;
 
 class Album
 {
@@ -42,7 +44,7 @@ class Album
         //header('application/json');
         $jwt = new JWT();
         $id = $jwt->checkToken();
-        //$id = 82;
+        $id = 82;
         if ($id != 0 && !empty($id)) {
             //$data = file_get_contents(json_decode("php://input"));
             $dbAlbum = new DbAlbum();
@@ -65,7 +67,9 @@ class Album
 
     public function updateAlbum()
     {
-        if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        if ($id == 0) {
             $jwt = new JWT();
             $token = $_SERVER['HTTP_AUTHORIZATION'];
             $dt = $jwt->JWT_decode($token);
@@ -100,12 +104,25 @@ class Album
 
     public function delete(){
         $data = json_decode(file_get_contents("php://input"));
-        $dbAlbum = new DbAlbum();
-        $images = new Images();
-        $photoIds = \R::getAll("SELECT phpto_id FROM relation_album_photo WHERE album_id = {$data->id_album}");
+        //$dbAlbum = new DbAlbum();
+        $model = new Model();
+        $s3 = new S3Libs();
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        $photoIds = \R::getAll("SELECT phpto_id, content_url FROM relation_album_photo WHERE album_id = {$data->id_album}");
         foreach($photoIds as $id_photo){
-            $images->delete($id_photo['photo_id']);
+          $resDel = $s3->DeleteObject($id_photo['content_url'],$id);
+          $resPhoto =   $model->delete('unit_photo',$id_photo['photo_id']);
         }
-        $dbAlbum->deleteAlbum($data->id_album);
+
+        $resAlbum = $model->delete('album',$data->id_album);
+
+        if($resAlbum){
+            $arr = ['error' => '', 'result' => true];
+            echo json_encode($arr);
+        }else{
+            $arr = ['error' => 'Не удалось удалить', 'result' => true];
+            echo json_encode($arr);
+        }
     }
 }

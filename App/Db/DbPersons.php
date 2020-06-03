@@ -55,27 +55,22 @@ class DbPersons
         return $array;
     }
 
-    public function updatePerson($id, $story_name,$content = null,array $all = null)
+    public function updatePerson($id, $first_name,array $all = null)
     {
         new Model();
-        $story = \R::load('person',$id);
-        $story->story_name = $story_name;
+        $person = \R::load('person',$id);
+        $person->first_name = $first_name;
 
-        if($content != null) $story->content = $content;
+        
         if($all != null && is_array($all)){
             foreach($all as $key => $val){
-                $story->$key = $val;
-                \R::store($story);
+                $person->$key = $val;
+                \R::store($person);
             }
         }
-        $result = \R::store($story);
+        $result = \R::store($person);
         return $result;
     }
 
-    public function delete($id)
-    {
-        new Model();
-        return $result = \R::exec("DELETE FROM unit_story WHERE id = {$id}");
-        
-    }
+    
 }

@@ -55,6 +55,8 @@
             $s3Libs = new S3Libs();
             $i = 0;
             foreach($array as $album){
+               // echo $album['id'];
+                //echo '-----albumID-----';
             $photoIds = \R::getAll("SELECT photo_id FROM relation_album_photo WHERE album_id = {$album['id']}");
                 //print_r($photoIds);
                 //echo '----photo-----';
@@ -66,11 +68,12 @@
                     $arrPhoto = \R::exportAll($photo);
                     $arrPhoto = $arrPhoto[0];
                     $arrPhoto['content_url'] = $s3Libs->getURL($photo['content_url'], $id);
-                    $photos[] = $arrPhoto;
+                    $photos[$n] = $arrPhoto;
                     $n++;
                 }
                 //echo '-----endphoto----';
                 $array[$i]['photo'] = $photos;
+                unset($photos);
                 $i++;
             }
             if($albums != null){

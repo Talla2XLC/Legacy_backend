@@ -116,10 +116,10 @@ class S3Libs extends Application
         ]);
         
     }
-    public function DeleteObject($nameFile,$content): void
+    public function DeleteObject($nameFile,$userID)
     {
-        $key          = $nameFile;
-        $content      = $content;
+        $this->key  = $userID.'/'.$nameFile;
+        //$content    = file_get_contents($content);
 
         $s3Client = new S3Client([
             'credentials' => [
@@ -130,16 +130,18 @@ class S3Libs extends Application
             'region'   => 'ru-msk',
             'version'  => 'latest',
         ]);
+        /*
         $s3Client->putObject([
             'Key'    => $this->key,
             'Bucket' => $this->config_cloud['bucket'],
             'Body'   => $content,
         ]);
+        */
         $result = $s3Client->deleteObject([
             'Key'    => $this->key,
             'Bucket' => $this->config_cloud['bucket'],
         ]);
-        
+        return $result;
     }
     
 }

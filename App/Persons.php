@@ -6,6 +6,7 @@ use App\Db\DbHistory;
 use App\Db\DbPersons;
 use Core\JWT;
 use Core\S3Libs;
+use Core\Model;
 
 class Persons
 {
@@ -13,28 +14,28 @@ class Persons
     {
         $jwt = new JWT();
         $id = $jwt->checkToken();
+        //echo $id;
         if (!empty($id) && $id != 0) {
             //$data = json_decode(file_get_contents("php://input"));
             $data = $_POST;
-            //print_r($_POST);
-            //print_r($_FILES);
-            //print_r($data);
+
             if (isset($data['first_name']) && !empty($data['first_name'])) {
-                $dbPersons= new DbPersons();
-                
-                foreach($data as $key => $val){
-                    if($key != 'story_name' || $key != 'content'){
-                        $dataStorys[$key] = $val; 
+                $dbPersons = new DbPersons();
+
+                foreach ($data as $key => $val) {
+                    if ($key != 'story_name' || $key != 'content') {
+                        $dataPersons[$key] = $val;
                     }
                 }
-                if(!is_array($dataStorys))
-                {
+                if (!is_array($dataPersons)) {
                     $dataStorys = null;
                 }
                 //print_r($dataStorys);
-                //print_r($_FILES);
-                if(isset($_FILES['ico_url'])){
-                    $image = $_FILES['ico_ulr']['name'];
+                //print_r($_FILES['ico_url']);
+                if (isset($_FILES['ico_url'])) {
+
+                    $image = $_FILES['ico_url']['name'];
+                    //echo '----- name----';
                     $n = 0;
                     $nImage = $image;
                     $image_sh = sha1($image);
@@ -44,7 +45,9 @@ class Persons
                         $img .= $image_sh[$math];
                     }
                     $image = $img . $nImage;
-                    $type = $_FILES['images']['type'];
+                    //echo '---fName---';
+                    //echo $image;
+                    $type = $_FILES['ico_url']['type'];
                     switch ($type) {
                         case 'image/png':
                             $type = true;
@@ -55,24 +58,28 @@ class Persons
                         default:
                             $type = false;
                     }
-                    $tmp = $_FILES['images']['tmp_name'];
+                    $tmp = $_FILES['ico_url']['tmp_name'];
                     $imageDir = 'temp/' . $image;
                     if ($type) {
                         move_uploaded_file($tmp, $imageDir);
                         $exifImage = exif_imagetype($imageDir);
-                        if($exifImage == IMAGETYPE_JPEG || $exifImage == IMAGETYPE_PNG) {
+                        if ($exifImage == IMAGETYPE_JPEG || $exifImage == IMAGETYPE_PNG) {
                             $s3Libs = new S3Libs();
-
                             $uploadResult = $s3Libs->uploadCloud($image, $imageDir, $id);
-                            unlink($imageDir);
-                           
+                            if ($uploadResult == true) {
+                                $id_person = $dbPersons->create($id, $dataPersons, $image);
+                                $arr = ['error' => '', 'result' => true];
+                                echo json_encode($arr);
+                            } else {
+                                //$id = $dbPersons->create($id, $dataPersons, $image);
+                                $arr = ['error' => '', 'result' => false];
+                                echo json_encode($arr);
+                            }
+                            // unlink($imageDir);
                         }
+                        //unlink($imageDir);
                     }
-                }       
-                    
-                $id = $dbPersons->create($id, $dataStorys,$image);
-                $arr = ['error' => '', 'result' => true];
-                echo json_encode($arr);
+                }
             } else {
                 $arr = ['error' => 'Пустое поле название Истории', 'result' => false];
                 echo json_encode($arr);
@@ -83,14 +90,17 @@ class Persons
         }
     }
 
-    public function getHistorys()
+    public function getPersons()
     {
         $jwt = new JWT();
         $id = $jwt->checkToken();
 
         if ($id != 0 && !empty($id)) {
             $dbHistorys = new DbHistory();
+
             $arr = $dbHistorys->readHistorys($id);
+
+            //print_r($arr);
             if ($arr != null) {
                 $arr = ['content' => $arr, 'result' => true];
                 echo json_encode($arr);
@@ -109,9 +119,22 @@ class Persons
         $jwt = new JWT();
         $id = $jwt->checkToken();
         //$data = json_decode(file_get_contents("php://input"));
+
         if ($id != 0 && !empty($id)) {
             $dbHistory = new DbPersons();
+            $s3Libs = new S3Libs();
+
             $arr = $dbHistory->readPerson($id);
+            //print_r($arr);
+            $i = 0;
+            foreach ($arr as $person) {
+                //echo $person["ico_url"];
+                //echo "----------";
+                //print_r($person);
+
+                $arr[$i]['ico_url'] = $s3Libs->getURL($person['ico_url'], $id);
+                $i++;
+            }
             echo json_encode($arr);
         } else {
             $arr = ['error' => 'Токен не действителен', 'result' => false];
@@ -125,30 +148,25 @@ class Persons
         $id = $jwt->checkToken();
         if (!empty($id) && $id != 0) {
             $data = json_decode(file_get_contents("php://input"));
-            //print_r($data);
-            if (isset($data->story_name) && !empty($data->story_name) && isset($data->story_id)) {
+            $data = $_POST;
+            if (isset($data['first_name']) && !empty($data['first_name']) && isset($data['id'])) {
                 $dbPerson = new DbPersons();
-                if (isset($data->content) && !empty($data->content)) {
-                    $content = $data->content;
-                } else {
-                    $content = null;
-                }
-                $story_id = (int) $data->story_id;
-                foreach($data as $key => $val){
-                    if($key != 'story_name' || $key != 'content'){
-                        $dataStorys[$key] = $val; 
+
+                $story_id = (int) $data['id'];
+                foreach ($data as $key => $val) {
+                    if ($key != 'story_name' || $key != 'content') {
+                        $dataStorys[$key] = $val;
                     }
                 }
-                if(!is_array($dataStorys))
-                {
+                if (!is_array($dataStorys)) {
                     $dataStorys = null;
                 }
-                
-                $id = $dbPerson->updatePerson($story_id, $data->story_name, $content,$dataStorys);
+
+                $id = $dbPerson->updatePerson($story_id, $data['first_name'], $dataStorys);
                 $arr = ['error' => '', 'result' => true];
                 echo json_encode($arr);
             } else {
-                $arr = ['error' => 'Пустое поле название Истории', 'result' => false];
+                $arr = ['error' => 'Пустое поле название ', 'result' => false];
                 echo json_encode($arr);
             }
         } else {
@@ -157,10 +175,56 @@ class Persons
         }
     }
 
-    public function delete(){
+    public function deletePerson()
+    {
+        //echo 'sdsds';
+        
+        $_PUT = array();
+        if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+            $putdata = file_get_contents('php://input');
+            $exploded = explode('&', $putdata);
+
+            foreach ($exploded as $pair) {
+                $item = explode('=', $pair);
+                if (count($item) == 2) {
+                    $_PUT[urldecode($item[0])] = urldecode($item[1]);
+                }
+            }
+        }
+        
         $jwt = new JWT();
         $id = $jwt->checkToken();
-        $dbPerson = new DbPersons();
-        $result = $dbPerson->delete($id);
+
+        $dbPerson = new Model();
+        //print_r($_POST);
+        //echo '--------------';
+        //print_r($_GET);
+        //echo 'sdsd';
+        if(isset($_POST['id'])){
+            $id_person = $_POST['id'];
+        }
+        if($data = json_decode(file_get_contents("php://input"))){
+            $id_person = $data->id;
+        }
+        //echo $id_person;
+        //echo '---------';
+        //print_r($_PUT);
+        //$id_person = $data->id;
+        //echo $id_person;
+
+        $result = $dbPerson->delete('person',$id_person);
+        //http_response_code(200);
+        //echo "Хорошо";
+        
+        
+        if($result){
+            
+            $arr = ['error'=>'','result'=>true];
+            echo json_encode($arr);
+        }else{
+            $arr = ['error'=>'Не удалось удалить!','result'=>false];
+            echo json_encode($arr);
+        }
+        
     }
 }
