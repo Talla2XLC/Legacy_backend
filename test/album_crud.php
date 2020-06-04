@@ -22,17 +22,17 @@
         let text = $("#text").val();
         let id = 2;
         axios
-            .delete(
-                'http://api.memory-lane.ru/db/deletePerson', {
+            .post(
+                'http://api.memory-lane.ru/db/deleteAlbum', {
                     //'first_name':`Грачья`,
                     //'phone': `6348374837948394`,
                     //'story_id': id
                     //'id_album': 2
-                    'id':100
+                    'id_album':63
                 }, {
                     headers: {
                         //'Content-Type': 'multipart/form-data',
-                        'Content-Type':'application/json',
+                        'Content-Type':'application/x-www-form-urlencoded',
                         'Authorization': `iTH1Q1DoWnIfBEadODAwcGtCNXFtTlpQRDJ6bmFsMThhZz09bUtjbUltTUlGc3c5WUJ5NjRSeWJMUGVhYlUwPQ==`,
                         //'Access-Control-Request-Method': 'POST',
                         //'Access-Control-Allow-Origin': 'http://legacy.loc'

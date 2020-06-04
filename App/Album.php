@@ -44,7 +44,7 @@ class Album
         //header('application/json');
         $jwt = new JWT();
         $id = $jwt->checkToken();
-        $id = 82;
+        //$id = 82;
         if ($id != 0 && !empty($id)) {
             //$data = file_get_contents(json_decode("php://input"));
             $dbAlbum = new DbAlbum();
@@ -104,19 +104,30 @@ class Album
 
     public function delete(){
         $data = json_decode(file_get_contents("php://input"));
+        if($data){
+            $id_album = $data->id_album;
+            //print_r($data);
+        }
+        if(isset($_POST['id_album'])){
+            $id_album = $_POST['id_album'];
+        }
         //$dbAlbum = new DbAlbum();
         $model = new Model();
         $s3 = new S3Libs();
         $jwt = new JWT();
         $id = $jwt->checkToken();
-        $photoIds = \R::getAll("SELECT phpto_id, content_url FROM relation_album_photo WHERE album_id = {$data->id_album}");
-        foreach($photoIds as $id_photo){
-          $resDel = $s3->DeleteObject($id_photo['content_url'],$id);
-          $resPhoto =   $model->delete('unit_photo',$id_photo['photo_id']);
-        }
-
-        $resAlbum = $model->delete('album',$data->id_album);
-
+        //$photoIds['photo_id'] = 'sdsdsd';
+        //$photoIds = \R::getAll("SELECT photo_id FROM relation_album_photo WHERE album_id = {$id_album}");
+        //foreach($photoIds as $id_photo){
+        //$photo = \R::getAll("SELECT content_url FROM unit_photo WHERE id = {$id_photo['photo_id']}");
+        //$photo['content_url'];
+        
+          //$resDel = $s3->DeleteObject($id_photo['content_url'],$id);
+          //$resPhoto =   $model->delete('unit_photo',$id_photo['photo_id']);
+        //}
+        echo "test";
+        //$resAlbum = $model->delete('album',$id_album);
+        /*
         if($resAlbum){
             $arr = ['error' => '', 'result' => true];
             echo json_encode($arr);
@@ -124,5 +135,7 @@ class Album
             $arr = ['error' => 'Не удалось удалить', 'result' => true];
             echo json_encode($arr);
         }
+        */
+        
     }
 }
