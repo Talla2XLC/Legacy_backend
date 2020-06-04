@@ -213,4 +213,25 @@ class Images
         }
         
     }
+
+    public function deletePhoto()
+    {
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        $model = new Model();
+        $s3 = new S3Libs();
+        $data = json_decode(file_get_contents("php://input"));
+
+        $id_photo = $data->id_photo;
+        if($id_photo !== null) {
+            $result = $model->delete('unit_photo',$id);
+        } else {
+            return $arr = ['error'=>'Нет id фотографии','result'=>false];
+            echo json_encode($arr);
+        }
+        $resultCloud = $s3->DeleteObject($id_photo, $id);
+        $arr = ['content' => $resultCloud, 'result' => true];
+        echo json_encode($arr);//Как то так получилось, ещё нужно упаковать в ответ фронту $result
+
+    }
 }

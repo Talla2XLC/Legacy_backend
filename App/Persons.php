@@ -190,7 +190,7 @@ class Persons
                     $_PUT[urldecode($item[0])] = urldecode($item[1]);
                 }
             }
-        }
+        }// код для проверки
         
         $jwt = new JWT();
         $id = $jwt->checkToken();
