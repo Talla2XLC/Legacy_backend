@@ -49,36 +49,55 @@
         public function readAlbum($id)
         {
             $model = new Model();
-            $albums = \R::findAll('album',"owner_id = ?",[$id]);
-            $array = \R::exportAll($albums);
+            //$albums = \R::findAll('album',"owner_id = ?",[$id]);
+            $albums = $model->getTable('album',$id);
+            //$albums = $albums[0];
+            //print_r($albums);
+            //print_r($albums);
+            //$array = \R::exportAll($albums);
             //Application::dump($albums);
+            //$albums = (array) $albums;
+            //print_r($albums);
             $s3Libs = new S3Libs();
             $i = 0;
-            foreach($array as $album){
-               // echo $album['id'];
+            
+            foreach($albums as $album){
+               //echo $album['id'].'--';
                 //echo '-----albumID-----';
+                //echo $album['id'];
+                //echo $album['id'];
             $photoIds = \R::getAll("SELECT photo_id FROM relation_album_photo WHERE album_id = {$album['id']}");
+            //print_r($photoIds);
                 //print_r($photoIds);
                 //echo '----photo-----';
+                
                 $n = 0;
-                foreach($photoIds as $photoID){
-                    //echo $photoID['photo_id'].'#'."\n";
-                    $photo = \R::findOne('unit_photo','id = ?',[$photoID['photo_id']]);
-                    //$photo$s3Libs->getURL($photo['content_url'], $id);
-                    $arrPhoto = \R::exportAll($photo);
-                    $arrPhoto = $arrPhoto[0];
-                    $arrPhoto['content_url'] = $s3Libs->getURL($photo['content_url'], $id);
-                    $photos[$n] = $arrPhoto;
-                    $n++;
+                if(!empty($photoIds)){
+                    foreach($photoIds as $photoID){
+                        //echo $photoID['photo_id'].'#'."\n";
+                        $photo = \R::findOne('unit_photo','id = ?',[$photoID['photo_id']]);
+                        //$photo$s3Libs->getURL($photo['content_url'], $id);
+                        $arrPhoto = \R::exportAll($photo);
+                        $arrPhoto = $arrPhoto[0];
+                        //print_r($arrPhoto);
+                        $arrPhoto['content_url'] = $s3Libs->getURL($photo['content_url'], $id);
+                        $photos[$n] = $arrPhoto;
+                        $n++;
+                    }
                 }
+                
+                
                 //echo '-----endphoto----';
-                $array[$i]['photo'] = $photos;
-                unset($photos);
+                if(!empty($photos)){
+                    $albums[$i]['photo'] = $photos;
+                    unset($photos);
+                }
+                
                 $i++;
             }
             if($albums != null){
             
-                return $array;
+                return $albums;
             }else{
                 return null;
             }

@@ -49,16 +49,20 @@ class Images
             //$data = json_decode(file_get_contents("php://input"));
             
             $id_album = $_POST['id_album'];
+            //echo $id_album;
+
             $result = $this->upladFile($id, $id_album);
         }
-
+        //echo 'sdsd';
 
         //$dbPictures->insert($id,$idAlbum,$url);
+        
         if (is_array($result)) {
             //$i = 0;
             //print_r($result);
             echo json_encode($result);
         }
+        
         //print_r($arr);
     }
     protected function upladFile($id_user, $id_album)
@@ -165,12 +169,13 @@ class Images
                                 $uploadResult = $s3Libs->uploadCloud($image, $imageDir, $id_user);
                                 
                                 
-                                $regResult = $RecFace->recognizePersone($imageDir,$image);
+                                
                                 if ($uploadResult == true) {
-                                    $dbPictures->insert($id_user, $id_album, $image);
+                                   $id_photo =  $dbPictures->insert($id_user, $id_album, $image);
                                     $result['result']  = true;
                                     $result['error'] = '';
                                     $result['img'] = $nImage;
+                                    $regResult = $RecFace->recognizePersone($id_user,$imageDir, $id_photo);
                                     unlink($imageDir);
                                 } else {
                                     $result['result'] = false;
@@ -210,6 +215,35 @@ class Images
             $result = \R::exec("DELETE FROM unit_photo WHERE id = {$data->id_photo}");
         }else{
             $result = \R::exec("DELETE FROM unit_photo WHERE id = {$id_photo}");
+        }
+        
+    }
+    public function update()
+    {
+        $jwt = new JWT();
+        $id = $jwt->checkToken();
+        $data = json_decode(file_get_contents("php://input"));
+        $arr = [];
+        foreach ($data as $key => $val) {
+            if($key == 'tags') {
+                if($val != 'false' || $val != false){
+                    $val = json_encode($val);
+                }else{
+                    $val = json_encode($arr);
+                }
+                
+            }
+
+            if($key = 'persons') $val = json_encode($val);
+            $dataStorys[$key] = $val;
+        }
+        $dbPictures = new DbPictures();
+        $result = $dbPictures->updateImage($dataStorys,$data->id);
+        if($result){
+            $arr = ['error'=>'','result'=>true];
+        }else
+        {
+            $arr = ['error'=>'','result'=>false];
         }
         
     }

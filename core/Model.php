@@ -7,15 +7,11 @@ class Model extends Application
 {
     
     public $pdo;
-
+    private $pd;
     public function __construct() {
         $this->pdo = Db::instance();
     }
-
-    public function delete($table,$id)
-    {
-        //new Model();
-        //return $result = \R::exec("DELETE FROM person WHERE id = $id");
+    private function getPDO(){
         $host = '193.168.3.129';
         $db   = 'dev_memory_lane';
         $user = 'postgres';
@@ -28,13 +24,28 @@ class Model extends Application
         \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
         \PDO::ATTR_EMULATE_PREPARES   => false,
         ];
-        $pdo = new \PDO($dsn, $user, $pass);
-        if($pdo){
-            return $pdo->query("DELETE FROM $table WHERE id = $id");
+        $this->pd = new \PDO($dsn, $user, $pass);
+    }
+    public function delete($table,$id)
+    {
+        //new Model();
+        //return $result = \R::exec("DELETE FROM person WHERE id = $id");
+        $this->getPDO();
+        if($this->pd){
+            return $this->pd->query("DELETE FROM $table WHERE id = $id");
         }else{
             return false;
         }
         //return $pdo->query("DELETE FROM person WHERE id = $id");
         
     }
+    public function getTable($table_name,$id){
+        $this->getPDO();
+        $sql = "SELECT * FROM {$table_name} WHERE owner_id = {$id}";
+        $sth = $this->pd->prepare($sql);
+        $sth->execute();
+        $result = $sth->fetchAll();
+        return $result;
+        //return $this->pd->query("SELECT * FROM {$table_name} WHERE id = {$id}");
+    } 
 }

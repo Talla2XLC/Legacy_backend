@@ -80,4 +80,22 @@ class DbPictures
         
         
     }
+    public function updateImage($data, $id_photo){
+        $model = new Model();
+        //$result = \R::load('unit_photo',$id_photo);
+        $sql = 'UPDATE unit_photo SET ';
+        $i = 0;
+        foreach($data as $key => $dt)
+        {
+            if($key != 'id') $sql .= "$key = $dt, ";
+            
+            $i++;
+            
+        }
+        $sql .= "WHERE id = {$id_photo}";
+
+        \R::exec($sql);
+
+        return true;
+    }
 }

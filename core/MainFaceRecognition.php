@@ -5,6 +5,11 @@ namespace Core;
 class MainFaceRecognition extends Application
 {
     public $token;
+    private $emotion = [
+        "Neutral" => "Нейтраль", "Happiness" => "Счастье", "Sadness" => "Печаль",
+        "Surprise" => "Удивление", "Fear" => "Страх", "Disgust" => "Отвращение",
+        "Anger" => "Гнев", "Contempt" => "Презрение"
+    ];
     public function __construct()
     {
         parent::__construct();
@@ -148,17 +153,24 @@ class MainFaceRecognition extends Application
 
     public function getResultRecognize($token,$image,$space){
         $resurlts = $this->recognize($token, $image, $space);
+
             //echo $resurlts;
             //print_r($resurlts);
             if (!empty($resurlts)) {
 
                 $json = json_decode($resurlts);
                 //Application::dump($json);
+                //print_r($json);
+                //echo $json->status;
                 $info = $json->body->objects[0];
+                //print_r($info);
+                if($json->status != 0){
                 $info = $info->persons;
+                //print_r($info);
                 $i = 0;
                 foreach ($info as $item) {
                     //print_r($item);
+                    //print_r($item->coord);
                     $n = 0;
                     foreach ($item->coord as $key => $coord) {
                         if ($key == 1) {
@@ -197,7 +209,11 @@ class MainFaceRecognition extends Application
                     //echo $i;
 
                 }
+                //print_r($arr);
                 return $arr;
+                
+                }
+                
             }else{
                 return false;
             }

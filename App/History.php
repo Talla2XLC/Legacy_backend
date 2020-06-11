@@ -4,6 +4,7 @@ namespace App;
 
 use App\Db\DbHistory;
 use Core\JWT;
+use Core\Model;
 
 class History
 {
@@ -114,6 +115,19 @@ class History
             }
         } else {
             $arr = ['error' => 'Токен не действителен', 'result' => false];
+            echo json_encode($arr);
+        }
+    }
+    public function delete(){
+        $model = new Model();
+        $data = json_decode(file_get_contents("php://input"));
+        $id_story = $data->id;
+        $result = $model->delete('unit_story',$id_story);
+        if($result){
+            $arr = ['error' => '', 'result' => true];
+            echo json_encode($arr);
+        }else{
+            $arr = ['error' => 'Произошла ошибка, не удалось удалить', 'result' => false];
             echo json_encode($arr);
         }
     }

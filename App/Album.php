@@ -125,7 +125,7 @@ class Album
           //$resDel = $s3->DeleteObject($id_photo['content_url'],$id);
           //$resPhoto =   $model->delete('unit_photo',$id_photo['photo_id']);
         //}
-        echo "test";
+        //echo "test";
         //$resAlbum = $model->delete('album',$id_album);
         /*
         if($resAlbum){

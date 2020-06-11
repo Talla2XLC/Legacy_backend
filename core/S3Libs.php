@@ -81,7 +81,7 @@ class S3Libs extends Application
             'Bucket' => $this->config_cloud['bucket'],
             'Key'    => $this->key,
         ]);
-        $request = $s3Client->createPresignedRequest($cmd, '+1 minutes');
+        $request = $s3Client->createPresignedRequest($cmd, '+5 minutes');
         $presignedUrl = (string) $request->getUri();
         return $presignedUrl;
     }

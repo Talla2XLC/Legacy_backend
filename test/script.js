@@ -44,6 +44,7 @@ $(document).ready(function(){
 		$(files).each(function(index, file) {
 			if ((file.size <= maxFileSize) && ((file.type == 'image/png') || (file.type == 'image/jpeg'))) {
 				Data.append('images[]', file);
+				Data.append('id_album','83');
 			};
 		});
 
@@ -56,6 +57,9 @@ $(document).ready(function(){
 			success: function(data) {
 				console.log(data);
 				alert ('Файлы были успешно загружены!');
+			},
+			error:function(error){
+				console.log(error);
 			}
 		});
 	}

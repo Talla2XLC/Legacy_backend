@@ -9,9 +9,10 @@ $data = [
     'client_secret'=>'4MBG481H7kAW2bY2Jyx5mbWtqnoKeTsai5wFqAEoi9bKovDHjiDfMPnkAKrn3Q',
     'grant_type'=>'client_credentials'
 ];
-$url = "https://smarty.mail.ru/api/v1/persons/recognize?oauth_provider=mcs&oauth_token=EeMGiQ3qah52CKHt3DwJZ1ZBQbfi7dp9JsV4fFHeZsqBbPfz3";
+$url = "https://smarty.mail.ru/api/v1/persons/truncate?oauth_provider=mcs&oauth_token=EeMGiQ3qah52CKHt3DwJZ1ZBQbfi7dp9JsV4fFHeZsqBbPfz3";
 $path = 'http://pictures.govoru.com/news/2013/11/27/8676/da75219e.jpg';
-$meta = '{"space":"1", "images":[{"name":"http://pictures.govoru.com/news/2013/11/27/8676/da75219e.jpg"}], "create_new":false}';
+//$meta = '{"space":"1", "images":[{"name":"http://pictures.govoru.com/news/2013/11/27/8676/da75219e.jpg"}], "create_new":false}';
+$meta = '{"space":"1"}';
 $filenames = array($path);
 $files = array();
 foreach ($filenames as $f)
@@ -53,7 +54,9 @@ $info = curl_getinfo($curl);
 
 
 curl_close($curl);
-$json = json_decode($response);
+echo $response;
+//$json = json_decode($response);
+/*
 $info = $json->body->objects[0];
 $info = $info->persons;
 //print_r($info);
@@ -71,6 +74,7 @@ foreach($info as $item){
     $i++;
 }
 echo json_encode($arr);
+*/
 function build_data_files($boundary, $fields, $files)
 {
     $data = '';
@@ -84,7 +88,7 @@ function build_data_files($boundary, $fields, $files)
             . 'Content-Disposition: form-data; name="' . $name . "\"".$eol.$eol
             . $content . $eol;
     }
-
+    /*
     foreach ($files as $name => $content)
     {
         $data .= "--" . $delimiter . $eol
@@ -96,6 +100,7 @@ function build_data_files($boundary, $fields, $files)
         $data .= $eol;
         $data .= $content . $eol;
     }
+    */
     $data .= "--" . $delimiter . "--".$eol;
     return $data;
 }
