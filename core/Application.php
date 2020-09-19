@@ -18,11 +18,14 @@ class Application
     {
         $class =  get_class($this);
         $config  = new Configuration('config');
-        
+        //print_r($config);
         if($class == 'Core\Mailer'){
-            $confMail = $config->get('config.dev.mail');
+            $config->addConfig('config.yaml');
+            $confMail = $config->get('config.mail');
+            //print_r($confMail);
             if($confMail != null){
                 //self::dump($confMail);
+                //print_r($confMail);
                 $this->config_mail = $confMail;
             }
             

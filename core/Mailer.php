@@ -25,6 +25,8 @@ class Mailer extends Application
             //self::dump($arr);
             //$this->mail->SMTPDebug = SMTP::DEBUG_SERVER; // Enable verbose debug output
             $this->mail->isSMTP();  // Send using SMTP
+            //echo $this->config_mail['Host'];
+            
             $this->mail->Host       = $this->config_mail['Host']; // Set the SMTP server to send through
             $this->mail->SMTPAuth   = $this->config_mail['SMTPAuth']; // Enable SMTP authentication
             $this->mail->Username   = $this->config_mail['Username']; // SMTP username

@@ -25,6 +25,7 @@ return $rout =  [
     '/recognize' => 'RecognitionFace@recognizePersone',
     '/auth/confirm' => 'AuthUser@checkEmail',
     '/tester' => 'Tester@testAuthUser',//test
+    '/testSendMail' => 'Tester@testSendMail',
     '/check/auth-email' => 'Users@checkUserEmail',
     '/user/registration' => 'Users@registrationUser',
     '/user/auth' => 'Users@authUser',
