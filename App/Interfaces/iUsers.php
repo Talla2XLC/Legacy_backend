@@ -12,5 +12,5 @@ interface iUsers
     public function all();
 
     public function setUser();
-    public function registrationUser($password, $email);
+    public function registrationUser($password = null, $email = null);
 }
